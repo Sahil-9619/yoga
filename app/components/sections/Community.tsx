@@ -26,11 +26,11 @@ export const Community = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row justify-center mt-16 gap-4 px-6 w-full max-w-md mx-auto sm:max-w-none">
-        <a href="#" className="flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white border border-[#D8E2D5] shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-emerald-200 transition-all duration-300 group">
+        <a href="https://www.instagram.com/sargam.bhartiya" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white border border-[#D8E2D5] shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-emerald-200 transition-all duration-300 group">
           <InstagramIcon size={22} />
           <span className="font-semibold tracking-wide uppercase text-sm text-[#1A3320]">Instagram</span>
         </a>
-        <a href="#" className="flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white border border-[#D8E2D5] shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-emerald-200 transition-all duration-300 group">
+        <a href="https://www.facebook.com/sargam.bhartiya" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-white border border-[#D8E2D5] shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-emerald-200 transition-all duration-300 group">
           <FacebookIcon size={22} />
           <span className="font-semibold tracking-wide uppercase text-sm text-[#1A3320]">Facebook</span>
         </a>

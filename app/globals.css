@@ -63,3 +63,20 @@ body {
     background: #10B981;
   }
 }
+
+@layer utilities {
+  .nav-link-underline {
+    @apply relative;
+  }
+  
+  .nav-link-underline::after {
+    content: '';
+    @apply absolute left-1/2 bottom-[-4px] w-0 h-[1.5px] bg-[#10B981] transition-all duration-300 ease-out;
+    transform: translateX(-50%);
+  }
+  
+  .nav-link-underline:hover::after {
+    @apply w-full;
+  }
+}
+

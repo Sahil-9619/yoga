@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Calendar, Clock, Globe } from 'lucide-react';
 import { Button } from '../ui/Button';
+import Link from 'next/link';
 
 export const Hero = () => {
   const { scrollYProgress } = useScroll();
@@ -22,13 +23,7 @@ export const Hero = () => {
       </motion.div>
 
       <div className="relative z-10 text-center px-4 w-full max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-emerald-200 bg-emerald-50/80 backdrop-blur-md mb-8 shadow-sm"
-        >
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="text-xs font-bold tracking-[0.2em] uppercase text-emerald-800">Yoga & Mindfulness Coach</span>
-        </motion.div>
+
 
         <motion.h1
           initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
@@ -53,7 +48,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-10"
         >
-          <motion.div 
+          <motion.div
             whileHover={{ y: -5, scale: 1.02 }}
             className="flex flex-col items-center p-4 bg-white rounded-2xl border border-[#D8E2D5] shadow-sm transition-shadow hover:shadow-lg"
           >
@@ -61,7 +56,7 @@ export const Hero = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-[#5C7562] mb-1">Expertise</span>
             <span className="text-[#1A3320] font-serif text-lg">Pranayama</span>
           </motion.div>
-          <motion.div 
+          <motion.div
             whileHover={{ y: -5, scale: 1.02 }}
             className="flex flex-col items-center p-4 bg-white rounded-2xl border border-[#D8E2D5] shadow-sm transition-shadow hover:shadow-lg"
           >
@@ -69,7 +64,7 @@ export const Hero = () => {
             <span className="text-xs font-bold uppercase tracking-wider text-[#5C7562] mb-1">Experience</span>
             <span className="text-[#1A3320] font-serif text-lg">1000+ Students</span>
           </motion.div>
-          <motion.div 
+          <motion.div
             whileHover={{ y: -5, scale: 1.02 }}
             className="flex flex-col items-center p-4 bg-white rounded-2xl border border-[#D8E2D5] shadow-sm transition-shadow hover:shadow-lg"
           >
@@ -83,9 +78,11 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.8 }}
           className="flex flex-col items-center w-full px-6"
         >
-          <Button variant="premium" size="lg" className="w-full sm:w-auto text-lg px-12 py-7 uppercase tracking-widest gap-3 shadow-2xl shadow-emerald-600/30">
-            Start Your Journey <ArrowRight className="w-5 h-5" />
-          </Button>
+          <Link href="/workshop" className="w-full sm:w-auto">
+            <Button variant="premium" size="lg" className="w-full text-lg px-12 py-7 uppercase tracking-widest gap-3 shadow-2xl shadow-emerald-600/30">
+              Book a Workshop <ArrowRight className="w-5 h-5" />
+            </Button>
+          </Link>
           <p className="mt-4 text-xs font-medium text-[#5C7562] uppercase tracking-widest">Join our community of mindful seekers</p>
         </motion.div>
       </div>

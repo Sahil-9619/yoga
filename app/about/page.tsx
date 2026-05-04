@@ -1,7 +1,10 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Heart, Shield, Users, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Heart, Shield, Users, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Button } from '../components/ui/Button';
+import { CTAStrip } from '../components/sections/CTAStrip';
+import Link from 'next/link';
 
 export default function AboutPage() {
   const fadeInUp = {
@@ -282,6 +285,8 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
+
+      <CTAStrip />
     </main>
   );
 }

@@ -26,6 +26,7 @@ export const Navbar = () => {
     { name: "Pranayama", href: "/yoga/breathwork", icon: Wind, desc: "Mastering the life force." },
     { name: "Meditation", href: "/yoga/meditation", icon: Moon, desc: "Finding silence in the chaos." },
     { name: "Kriya Yoga", href: "/yoga/kriya", icon: Zap, desc: "Advanced spiritual evolution." },
+
   ];
 
   return (
@@ -48,7 +49,12 @@ export const Navbar = () => {
             )}>
               <Sparkles className={cn(isScrolled ? "w-4 h-4" : "w-5 h-5")} />
             </div>
-            <span className={cn("font-serif uppercase transition-all duration-500", isScrolled ? "text-xs sm:text-sm font-bold tracking-tight text-[#1A3320]" : (isAboutPage ? "text-xl font-medium tracking-widest text-white" : "text-xl font-medium tracking-widest text-[#1A3320]"))}>
+            <span className={cn(
+              "font-serif uppercase transition-all duration-500", 
+              isScrolled 
+                ? "text-[10px] sm:text-xs font-bold tracking-tight text-[#1A3320]" 
+                : (isAboutPage ? "text-base sm:text-xl font-medium tracking-widest text-white" : "text-base sm:text-xl font-medium tracking-widest text-[#1A3320]")
+            )}>
               Saargaamm bhartiye
             </span>
           </Link>
@@ -62,7 +68,7 @@ export const Navbar = () => {
               onMouseLeave={() => setIsYogaHovered(false)}
             >
               <button className={cn(
-                "flex items-center gap-1.5 text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors",
+                "nav-link-underline flex items-center gap-1.5 text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors",
                 isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]")
               )}>
                 Yoga <ChevronDown className={cn("w-3 h-3 transition-transform duration-300", isYogaHovered && "rotate-180")} />
@@ -101,30 +107,32 @@ export const Navbar = () => {
               </AnimatePresence>
             </div>
 
-            <Link href="/about" className={cn("text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
+            <Link href="/workshop" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
+              Workshop
+            </Link>
+
+            <Link href="/about" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
               About
             </Link>
 
-            <button 
-              onClick={() => {
-                if (pathname === '/') {
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                  window.location.href = '/#contact';
-                }
-              }}
-              className={cn("text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}
+
+
+            <Link
+              href="/contact"
+              className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}
             >
               Contact
-            </button>
+            </Link>
           </div>
 
           {/* Action Buttons */}
           <div className="flex-none flex items-center gap-3 z-10">
-            <Button variant={isScrolled ? "premium" : (isAboutPage ? "outline" : "premium")} size={isScrolled ? "sm" : "default"} className={cn("!hidden lg:!flex uppercase tracking-wider text-xs", !isScrolled && isAboutPage && "text-white border-white/30 hover:bg-white/10")}>
-              Get Started
-            </Button>
-            <button onClick={() => setIsMobileMenuOpen(true)} className={cn("md:hidden transition-all p-2 rounded-full border shadow-sm", isScrolled ? "text-[#354E3B] hover:text-[#1A3320] bg-white/50 backdrop-blur-sm border-[#D8E2D5]" : (isAboutPage ? "text-white border-white/20 bg-white/10 backdrop-blur-md" : "text-[#354E3B] hover:text-[#1A3320] bg-white/50 backdrop-blur-sm border-[#D8E2D5]"))}>
+            <Link href="/workshop">
+              <Button variant={isScrolled ? "premium" : (isAboutPage ? "outline" : "premium")} size={isScrolled ? "sm" : "default"} className={cn("!hidden lg:!flex uppercase tracking-wider text-xs", !isScrolled && isAboutPage && "text-white border-white/30 hover:bg-white/10")}>
+                Book a Session
+              </Button>
+            </Link>
+            <button onClick={() => setIsMobileMenuOpen(true)} className={cn("lg:hidden transition-all p-2 rounded-full border shadow-sm", isScrolled ? "text-[#354E3B] hover:text-[#1A3320] bg-white/50 backdrop-blur-sm border-[#D8E2D5]" : (isAboutPage ? "text-white border-white/20 bg-white/10 backdrop-blur-md" : "text-[#354E3B] hover:text-[#1A3320] bg-white/50 backdrop-blur-sm border-[#D8E2D5]"))}>
               <Menu className="w-5 h-5" />
             </button>
           </div>
@@ -161,21 +169,8 @@ export const Navbar = () => {
               <div className="h-[1px] bg-emerald-100/50 w-full" />
 
               <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">About</Link>
-              <button 
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  setTimeout(() => {
-                    if (pathname === '/') {
-                      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                      window.location.href = '/#contact';
-                    }
-                  }, 300);
-                }} 
-                className="font-serif text-3xl text-[#1A3320] text-left"
-              >
-                Contact
-              </button>
+              <Link href="/workshop" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">Workshop</Link>
+              <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">Contact</Link>
             </div>
           </motion.div>
         )}

@@ -11,9 +11,9 @@ export const Footer = () => {
   const pathname = usePathname();
 
   const socialLinks = [
-    { icon: InstagramIcon, label: "Instagram", color: "bg-pink-50 hover:bg-pink-100", textColor: "text-pink-600" },
-    { icon: FacebookIcon, label: "Facebook", color: "bg-blue-50 hover:bg-blue-100", textColor: "text-blue-600" },
-    { icon: YouTubeIcon, label: "YouTube", color: "bg-red-50 hover:bg-red-100", textColor: "text-red-600" },
+    { icon: InstagramIcon, label: "Instagram", color: "bg-pink-50 hover:bg-pink-100", textColor: "text-pink-600", href: "https://www.instagram.com/sargam.bhartiya" },
+    { icon: FacebookIcon, label: "Facebook", color: "bg-blue-50 hover:bg-blue-100", textColor: "text-blue-600", href: "https://www.facebook.com/sargam.bhartiya" },
+    { icon: YouTubeIcon, label: "YouTube", color: "bg-red-50 hover:bg-red-100", textColor: "text-red-600", href: "#" },
   ];
 
   return (
@@ -40,7 +40,9 @@ export const Footer = () => {
               {socialLinks.map((social, i) => (
                 <motion.a
                   key={i}
-                  href="#"
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ y: -5, scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className={`w-12 h-12 rounded-full ${social.color} flex items-center justify-center transition-all shadow-sm`}

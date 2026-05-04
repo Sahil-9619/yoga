@@ -25,6 +25,7 @@ export default function Home() {
         <Curriculum />
         <Audience />
         <Community />
+        <CTAStrip />
         <Contact />
         <FAQs />
       </main>

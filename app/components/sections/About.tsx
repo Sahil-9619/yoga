@@ -42,7 +42,10 @@ export const About = () => {
 
           <div className="mt-10 flex flex-row items-center justify-between w-full gap-2 sm:gap-6">
             <div className="flex flex-row items-center gap-2 sm:gap-4">
-              <motion.div
+              <motion.a
+                href="https://www.instagram.com/sargam.bhartiya"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ y: -5, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="group flex-shrink-0"
@@ -57,9 +60,12 @@ export const About = () => {
                   </motion.div>
                   <span>Instagram</span>
                 </Button>
-              </motion.div>
+              </motion.a>
 
-              <motion.div
+              <motion.a
+                href="https://www.facebook.com/sargam.bhartiya"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ y: -5, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="group flex-shrink-0"
@@ -74,13 +80,13 @@ export const About = () => {
                   </motion.div>
                   <span>Facebook</span>
                 </Button>
-              </motion.div>
+              </motion.a>
             </div>
 
-            <Link href="/about" className="flex-shrink-0">
+            <Link href="/workshop" className="flex-shrink-0">
               <Button variant="ghost" className="text-emerald-700 font-bold uppercase tracking-widest text-[10px] sm:text-xs gap-2 group whitespace-nowrap px-2 sm:px-4">
-                <span className="hidden sm:inline">Learn More About Us</span>
-                <span className="sm:hidden">Learn More</span>
+                <span className="hidden sm:inline">Book a Workshop</span>
+                <span className="sm:hidden">Book Now</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
