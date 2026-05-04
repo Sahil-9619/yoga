@@ -40,8 +40,8 @@ export const About = () => {
             </p>
           </div>
 
-          <div className="mt-10 flex flex-row items-center justify-between w-full gap-2 sm:gap-6">
-            <div className="flex flex-row items-center gap-2 sm:gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between w-full gap-6">
+            <div className="flex flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto justify-center sm:justify-start">
               <motion.a
                 href="https://www.instagram.com/sargam.bhartiya"
                 target="_blank"
@@ -83,10 +83,10 @@ export const About = () => {
               </motion.a>
             </div>
 
-            <Link href="/workshop" className="flex-shrink-0">
+            <Link href="/about" className="w-full sm:w-auto flex justify-center sm:justify-end">
               <Button variant="ghost" className="text-emerald-700 font-bold uppercase tracking-widest text-[10px] sm:text-xs gap-2 group whitespace-nowrap px-2 sm:px-4">
-                <span className="hidden sm:inline">Book a Workshop</span>
-                <span className="sm:hidden">Book Now</span>
+                <span className="hidden sm:inline">Learn more</span>
+                <span className="sm:hidden">Learn more</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
