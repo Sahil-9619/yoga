@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 import { Sparkles, Mail, Phone, MapPin } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { InstagramIcon, FacebookIcon, YouTubeIcon } from '../ui/SocialIcons';
 
 export const Footer = () => {
-  const pathname = usePathname();
 
   const socialLinks = [
     { icon: InstagramIcon, label: "Instagram", color: "bg-pink-50 hover:bg-pink-100", textColor: "text-pink-600", href: "https://www.instagram.com/sargam.bhartiya" },
@@ -29,8 +29,17 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           {/* Brand Column */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-emerald-500" />
+            <div className="flex items-center gap-3">
+              <div className="relative w-20 h-20 z-10 mr-2">
+                <Image
+                  src="/logo-v2.png"
+                  alt="Logo"
+                  fill
+                  sizes="80px"
+                  className="object-contain scale-330"
+                  unoptimized
+                />
+              </div>
               <span className="font-serif tracking-widest uppercase text-[#1A3320] text-xl font-bold">Saargaamm bhartiye</span>
             </div>
             <p className="text-[#5C7562] font-light leading-relaxed">

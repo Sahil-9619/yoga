@@ -5,6 +5,7 @@ import { Sparkles, Menu, X, ChevronDown, Activity, Wind, Moon, Sun, Zap } from '
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export const Navbar = () => {
@@ -21,12 +22,9 @@ export const Navbar = () => {
   }, []);
 
   const yogaSections = [
-    { name: "Hatha Yoga", href: "/yoga/hatha", icon: Sun, desc: "Traditional balance of sun & moon." },
-    { name: "Vinyasa Flow", href: "/yoga/vinyasa", icon: Activity, desc: "Fluid movement & transitions." },
-    { name: "Pranayama", href: "/yoga/breathwork", icon: Wind, desc: "Mastering the life force." },
-    { name: "Meditation", href: "/yoga/meditation", icon: Moon, desc: "Finding silence in the chaos." },
-    { name: "Kriya Yoga", href: "/yoga/kriya", icon: Zap, desc: "Advanced spiritual evolution." },
-
+    { name: "Pranayama", href: "/yoga/pranayama", icon: Wind, desc: "Mastering the life force through breath." },
+    { name: "Breathwork", href: "/yoga/breathwork", icon: Zap, desc: "Dynamic techniques for energy and focus." },
+    { name: "Meditation", href: "/yoga/meditation", icon: Moon, desc: "Cultivating stillness and inner peace." },
   ];
 
   return (
@@ -44,15 +42,23 @@ export const Navbar = () => {
           {/* Logo */}
           <Link href="/" className="flex-none flex items-center gap-3 cursor-pointer group z-10">
             <div className={cn(
-              "rounded-full flex items-center justify-center transition-all duration-500",
-              isScrolled ? "w-8 h-8 bg-emerald-50 text-emerald-600" : (isAboutPage ? "w-10 h-10 bg-white/10 backdrop-blur-md border border-white/20 text-white" : "w-10 h-10 bg-white shadow-sm border border-[#E1EAE1] text-emerald-600 group-hover:scale-110")
+              "relative flex items-center justify-center transition-all duration-500 z-[110]",
+              isScrolled ? "w-12 h-12" : "w-20 h-20"
             )}>
-              <Sparkles className={cn(isScrolled ? "w-4 h-4" : "w-5 h-5")} />
+              <Image
+                src="/logo-v2.png"
+                alt="Logo"
+                fill
+                sizes="(max-width: 768px) 48px, 80px"
+                className="object-contain scale-200"
+                priority
+                unoptimized
+              />
             </div>
             <span className={cn(
-              "font-serif uppercase transition-all duration-500", 
-              isScrolled 
-                ? "text-[10px] sm:text-xs font-bold tracking-tight text-[#1A3320]" 
+              "font-serif uppercase transition-all duration-500",
+              isScrolled
+                ? "text-[10px] sm:text-xs font-bold tracking-tight text-[#1A3320]"
                 : (isAboutPage ? "text-base sm:text-xl font-medium tracking-widest text-white" : "text-base sm:text-xl font-medium tracking-widest text-[#1A3320]")
             )}>
               Saargaamm bhartiye

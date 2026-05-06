@@ -3,16 +3,16 @@ import YogaTemplate from '../../components/YogaTemplate';
 export default function BreathworkPage() {
   return (
     <YogaTemplate 
-      title="Pranayama"
-      subtitle="The Science of Breath"
-      description="Master your life force (Prana) through ancient breathing techniques that recalibrate your nervous system and expand your consciousness."
+      title="Breathwork"
+      subtitle="Modern Breathing Mastery"
+      description="Experience the transformative power of conscious breathing. These techniques are designed for the modern lifestyle to help you manage stress, boost energy, and achieve deep mental clarity."
       benefits={[
-        "Reduces anxiety and cortisol levels instantly.",
-        "Increases lung capacity and oxygen absorption.",
-        "Improves sleep quality and immune response.",
-        "Balances the left and right brain hemispheres."
+        "Instant nervous system regulation and stress relief.",
+        "Improved focus and mental performance.",
+        "Deep emotional release and somatic healing.",
+        "Enhanced athletic performance and recovery."
       ]}
-      image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80"
+      image="/images/breathwork.png"
     />
   );
 }

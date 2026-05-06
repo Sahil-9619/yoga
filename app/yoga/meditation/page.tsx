@@ -12,7 +12,7 @@ export default function MeditationPage() {
         "Promotes emotional resilience and stability.",
         "Lowers blood pressure and improves heart health."
       ]}
-      image="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80"
+      image="/images/meditation.png"
     />
   );
 }
