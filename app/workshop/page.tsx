@@ -120,7 +120,7 @@ export default function WorkshopPage() {
     };
 
     return (
-        <main className="bg-[#F8FAF7] min-h-screen pt-24 pb-20 overflow-x-hidden">
+        <main className="bg-[#F8FAF7] min-h-screen pt-35 pb-20 overflow-x-hidden">
             {/* Header Section */}
             <section className="px-6 mb-10">
                 <div className="max-w-7xl mx-auto">
@@ -131,7 +131,7 @@ export default function WorkshopPage() {
                     >
                         <div className="max-w-2xl text-center md:text-left">
                             <span className="text-emerald-600 font-bold text-[10px] tracking-[0.4em] uppercase mb-4 block">Curated Sessions</span>
-                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-[#1A3320] leading-none mb-6">Upcoming <br /><span className="text-emerald-700 italic">Workshops.</span></h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#1A3320] leading-none mb-6">Upcoming <br /><span className="text-emerald-700 italic">Workshops.</span></h1>
                             <p className="text-[#5C7562] text-base md:text-lg font-light leading-relaxed">
                                 Explore our full calendar of immersive sessions. From physical mastery to spiritual depth, find the workshop that resonates with your journey.
                             </p>
@@ -329,12 +329,12 @@ export default function WorkshopPage() {
                                 <span className="text-white text-[10px] font-bold uppercase tracking-[0.3em]">Himalayan Rituals</span>
                             </div>
                         </div>
-                        
+
                         {/* Image 2 */}
                         <div className="rounded-[1.5rem] md:rounded-[3rem] overflow-hidden group relative">
                             <img src="/images/gallery/meditation.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Meditation" />
                         </div>
-                        
+
                         {/* Image 3 */}
                         <div className="rounded-[1.5rem] md:rounded-[3rem] overflow-hidden group relative">
                             <img src="/images/gallery/zen.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Zen" />

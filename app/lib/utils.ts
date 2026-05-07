@@ -1,1 +1,1 @@
-export const cn = (...classes: (string | boolean | undefined)[]) => classes.filter(Boolean).join(' ');
+export const cn = (...classes: any[]) => classes.filter(c => typeof c === 'string' && c).join(' ');

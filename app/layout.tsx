@@ -17,9 +17,8 @@ export const metadata: Metadata = {
   description: "Your pranayama and meditation guide",
 };
 
-import { Navbar } from "./components/sections/Navbar";
-import { Footer } from "./components/sections/Footer";
 import { ScrollProgress } from "./components/ui/ScrollProgress";
+import LayoutWrapper from "./components/layout/LayoutWrapper";
 
 export default function RootLayout({
   children,
@@ -29,14 +28,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      data-scroll-behavior="smooth"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col">
         <ScrollProgress />
-        <Navbar />
-        {children}
-        <Footer />
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
       </body>
     </html>
   );
