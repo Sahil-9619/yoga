@@ -1,19 +1,43 @@
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Send, Sparkles, MapPin, ArrowUpRight, Clock, Globe, Users } from 'lucide-react';
+import { MessageSquare, Send, Sparkles, MapPin, ArrowUpRight, Clock, Globe, Users, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { FacebookIcon } from '../components/ui/SocialIcons';
+import { HiMail } from 'react-icons/hi';
+import { ContactService } from '../services/contact.service';
+import { cn } from '../lib/utils';
+import { useSocialLinks } from '../hooks/useSocialLinks';
 
 export default function ContactPage() {
-    const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
+    const social = useSocialLinks();
+    const [formData, setFormData] = useState({ name: '', phone: '', email: '', message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const phone = "918709162825";
-        const text = `Hi Sargam! My name is ${formData.name} (${formData.phone}). ${formData.message}`;
-        const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        setIsSubmitting(true);
+        setStatus({ type: null, message: '' });
+
+        try {
+            await ContactService.sendMessage(formData);
+            setStatus({ type: 'success', message: 'Thank you! Your message has been sent successfully.' });
+            setFormData({ name: '', phone: '', email: '', message: '' });
+
+            // Clear success message after 5 seconds
+            setTimeout(() => setStatus({ type: null, message: '' }), 5000);
+        } catch (error: any) {
+            const errorMessage = error.message === 'Failed to fetch' 
+                ? 'Something went wrong. Please try again later.' 
+                : (error.message || 'Something went wrong. Please try again later.');
+            setStatus({
+                type: 'error',
+                message: errorMessage
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -37,18 +61,18 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* Two Things: 1. Facebook Page Ad/Connect 2. Form */}
+
             <section className="px-6">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
-                    {/* Thing 1: Facebook Page Ad & Connect */}
+
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         className="relative rounded-[3rem] overflow-hidden bg-white border border-emerald-100 shadow-xl flex flex-col"
                     >
-                        {/* "Ad" Style Header */}
+
                         <div className="relative h-64 overflow-hidden">
                             <img
                                 src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80"
@@ -83,7 +107,7 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <div className="text-[10px] font-bold text-[#1A3320] uppercase tracking-widest">Connect Digitally</div>
-                                            <div className="text-sm text-[#5C7562]">facebook.com/sargam.bhartiya</div>
+                                            <div className="text-sm text-[#5C7562]">{social.facebook.replace('https://', '')}</div>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4 group cursor-default">
@@ -95,15 +119,25 @@ export default function ContactPage() {
                                             <div className="text-sm text-[#5C7562]">1.1k+ Followers</div>
                                         </div>
                                     </div>
+                                    <div className="flex items-center gap-4 group cursor-default">
+                                        <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                                            <HiMail size={20} />
+                                        </div>
+                                        <div>
+                                            <div className="text-[10px] font-bold text-[#1A3320] uppercase tracking-widest">Email Support</div>
+                                            <div className="text-sm text-[#5C7562]">hello@sargambhartiya.com</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div className="mt-10">
                                 <a
-                                    href="https://www.facebook.com/sargam.bhartiya"
-                                    target="_blank"
+                                    href={social.facebook || '#'}
+                                    onClick={(e) => { if (!social.facebook) e.preventDefault(); }}
+                                    target={social.facebook ? '_blank' : undefined}
                                     rel="noopener noreferrer"
-                                    className="block w-full"
+                                    className={`block w-full ${!social.facebook ? 'opacity-50 pointer-events-none' : ''}`}
                                 >
                                     <Button variant="outline" className="w-full py-7 rounded-2xl text-blue-600 border-blue-100 hover:bg-blue-50 hover:border-blue-200 uppercase tracking-[0.2em] text-[10px] font-bold gap-3 group">
                                         <FacebookIcon size={16} /> Follow us on Facebook <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
@@ -128,6 +162,21 @@ export default function ContactPage() {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6 text-left">
+                            {status.type && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className={cn(
+                                        "p-4 rounded-xl text-sm font-medium flex items-center gap-3 border",
+                                        status.type === 'success'
+                                            ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                                            : "bg-red-50 text-red-700 border-red-100"
+                                    )}
+                                >
+                                    {status.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+                                    {status.message}
+                                </motion.div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#5C7562] ml-1">Full Name</label>
@@ -148,7 +197,21 @@ export default function ContactPage() {
                                         placeholder="+91 00000 00000"
                                         className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-[#D8E2D5] focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all text-sm placeholder:text-emerald-900/40 text-slate-800"
                                         value={formData.phone}
-                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, '');
+                                            setFormData({ ...formData, phone: val });
+                                        }}
+                                    />
+                                </div>
+                                <div className="space-y-2 md:col-span-2">
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#5C7562] ml-1">Email Address</label>
+                                    <input
+                                        required
+                                        type="email"
+                                        placeholder="your@email.com"
+                                        className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-[#D8E2D5] focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all text-sm placeholder:text-emerald-900/40 text-slate-800"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -164,8 +227,18 @@ export default function ContactPage() {
                                 ></textarea>
                             </div>
                             <div className="flex justify-center pt-2">
-                                <Button variant="premium" size="lg" type="submit" className="w-full uppercase tracking-widest gap-3 shadow-md py-6 text-sm">
-                                    Send Message <MessageSquare className="w-4 h-4" />
+                                <Button
+                                    variant="premium"
+                                    size="lg"
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="w-full uppercase tracking-widest gap-3 shadow-md py-6 text-sm disabled:opacity-70"
+                                >
+                                    {isSubmitting ? (
+                                        <>Sending Message... <Loader2 className="w-4 h-4 animate-spin" /></>
+                                    ) : (
+                                        <>Send Message <MessageSquare className="w-4 h-4" /></>
+                                    )}
                                 </Button>
                             </div>
                         </form>

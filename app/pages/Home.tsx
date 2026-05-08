@@ -2,8 +2,6 @@
 import React from 'react';
 import { Hero } from '../components/sections/Hero';
 import { Audience } from '../components/sections/Audience';
-import { Curriculum } from '../components/sections/Curriculum';
-import { Philosophy } from '../components/sections/Philosophy';
 import { About } from '../components/sections/About';
 import { Community } from '../components/sections/Community';
 import { FAQs } from '../components/sections/FAQs';
@@ -21,8 +19,6 @@ export default function Home() {
       <main>
         <Hero />
         <About />
-        <Philosophy />
-        <Curriculum />
         <Audience />
         <Community />
         <CTAStrip />

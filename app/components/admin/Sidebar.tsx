@@ -36,6 +36,7 @@ interface SidebarProps {
 export const menuItems = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: HiViewGrid },
   { name: 'Workshops', href: '/admin/workshops', icon: HiAcademicCap },
+  { name: 'Bookings', href: '/admin/bookings', icon: HiCalendar },
   { name: 'Categories', href: '/admin/categories', icon: HiCollection },
   { name: 'Contacts', href: '/admin/contacts', icon: HiMail },
   { name: 'Videos', href: '/admin/videos', icon: HiVideoCamera },

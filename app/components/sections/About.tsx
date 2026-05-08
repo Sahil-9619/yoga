@@ -4,10 +4,11 @@ import { motion } from 'framer-motion';
 import { Button } from '../ui/Button';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-
 import { InstagramIcon, FacebookIcon } from '../ui/SocialIcons';
+import { useSocialLinks } from '../../hooks/useSocialLinks';
 
 export const About = () => {
+  const social = useSocialLinks();
   return (
     <section id="about" className="py-16 px-6 bg-white border-y border-[#E1EAE1]">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -43,12 +44,13 @@ export const About = () => {
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-between w-full gap-6">
             <div className="flex flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto justify-center sm:justify-start">
               <motion.a
-                href="https://www.instagram.com/sargam.bhartiya"
-                target="_blank"
+                href={social.instagram || '#'}
+                onClick={(e) => { if (!social.instagram) e.preventDefault(); }}
+                target={social.instagram ? '_blank' : undefined}
                 rel="noopener noreferrer"
                 whileHover={{ y: -5, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex-shrink-0"
+                className={`group flex-shrink-0 ${!social.instagram ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
               >
                 <Button
                   variant="outline"
@@ -63,12 +65,13 @@ export const About = () => {
               </motion.a>
 
               <motion.a
-                href="https://www.facebook.com/sargam.bhartiya"
-                target="_blank"
+                href={social.facebook || '#'}
+                onClick={(e) => { if (!social.facebook) e.preventDefault(); }}
+                target={social.facebook ? '_blank' : undefined}
                 rel="noopener noreferrer"
                 whileHover={{ y: -5, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex-shrink-0"
+                className={`group flex-shrink-0 ${!social.facebook ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
               >
                 <Button
                   variant="outline"

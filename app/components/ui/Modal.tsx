@@ -17,20 +17,20 @@ export function Modal({ isOpen, onClose, title, description, children }: ModalPr
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-16 overflow-y-auto">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-[#1A3320]/40 backdrop-blur-sm"
+            className="fixed inset-0 bg-[#1A3320]/40 backdrop-blur-sm"
           />
           
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden my-auto"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
@@ -42,7 +42,7 @@ export function Modal({ isOpen, onClose, title, description, children }: ModalPr
                 </div>
                 <button 
                   onClick={onClose}
-                  className="p-2 hover:bg-emerald-50 text-[#5C7562] rounded-full transition-colors"
+                  className="p-2 hover:bg-emerald-50 text-[#5C7562] rounded-full transition-colors flex-shrink-0"
                 >
                   <HiX size={20} />
                 </button>

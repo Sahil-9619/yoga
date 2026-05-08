@@ -25,6 +25,9 @@ export class AuthService {
       return data;
     } catch (error: any) {
       console.error('AuthService Login Error:', error);
+      if (error.message === 'Failed to fetch') {
+        throw new Error('Something went wrong. Please check your connection.');
+      }
       throw error;
     }
   }
@@ -95,14 +98,12 @@ export class AuthService {
 
     return data;
 
-  } catch (error: any) {
-
-    console.error(
-      'Update Password Error:',
-      error
-    );
-
-    throw error;
-  }
+    } catch (error: any) {
+      console.error('Update Password Error:', error);
+      if (error.message === 'Failed to fetch') {
+        throw new Error('Something went wrong. Please check your connection.');
+      }
+      throw error;
+    }
 }
 }

@@ -33,7 +33,10 @@ export default function AdminLoginPage() {
       await AuthService.login(email, password);
       router.push('/admin/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Invalid credentials. Please try again.');
+      const errorMessage = err.message === 'Failed to fetch'
+        ? 'Something went wrong. Please check your connection.'
+        : (err.message || 'Invalid credentials. Please try again.');
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

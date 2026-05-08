@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   HiCollection, 
@@ -10,49 +10,65 @@ import {
   HiX,
   HiFilter
 } from 'react-icons/hi';
-import { cn } from '@/app/lib/utils';
+import { cn } from '../../lib/utils';
 import { ConfirmModal } from '@/app/components/ui/ConfirmModal';
+import { CategoryService } from '@/app/services/category.service';
 
 export default function AdminCategories() {
-  const [categories, setCategories] = useState([
-    { id: 1, name: 'Breathwork', count: 15, color: 'bg-blue-50 text-blue-600' },
-    { id: 2, name: 'Yoga Flow', count: 24, color: 'bg-emerald-50 text-emerald-600' },
-    { id: 3, name: 'Meditation', count: 12, color: 'bg-purple-50 text-purple-600' },
-    { id: 4, name: 'Pranayama', count: 32, color: 'bg-amber-50 text-amber-600' },
-  ]);
-
+  const [categories, setCategories] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | string | null>(null);
 
-  const handleAddCategory = (e: React.FormEvent) => {
+  const fetchCategories = async () => {
+    setIsLoading(true);
+    try {
+      const data = await CategoryService.getAllCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCategoryName.trim()) return;
     
-    const newCat = {
-      id: Date.now(),
-      name: newCategoryName,
-      count: 0,
-      color: 'bg-gray-50 text-gray-600'
-    };
-    
-    setCategories([...categories, newCat]);
-    setNewCategoryName('');
-    setIsAdding(false);
+    try {
+      await CategoryService.createCategory(newCategoryName);
+      setNewCategoryName('');
+      setIsAdding(false);
+      fetchCategories();
+    } catch (error) {
+      console.error('Error creating category:', error);
+    }
   };
 
-  const handleDeleteClick = (id: number) => {
+  const handleDeleteClick = (id: number | string) => {
     setDeletingId(id);
     setIsConfirmOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (deletingId) {
-      setCategories(categories.filter(c => c.id !== deletingId));
-      setDeletingId(null);
+      try {
+        await CategoryService.deleteCategory(deletingId);
+        fetchCategories();
+        setDeletingId(null);
+      } catch (error) {
+        console.error('Error deleting category:', error);
+      }
     }
   };
+
 
   return (
     <main className="flex-1 pt-2 px-4 lg:pt-4 lg:px-10 max-w-7xl w-full mx-auto">
@@ -111,34 +127,45 @@ export default function AdminCategories() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className="bg-white border border-emerald-100/60 rounded-2xl p-4 flex items-center justify-between group hover:border-emerald-200 transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", category.color)}>
-                  <HiFilter size={20} />
+          {isLoading ? (
+            <div className="col-span-full py-20 flex flex-col items-center justify-center gap-4">
+              <div className="w-10 h-10 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin" />
+              <p className="text-sm text-emerald-600 font-medium">Loading categories...</p>
+            </div>
+          ) : categories.length > 0 ? (
+            categories.map((category, index) => (
+              <motion.div
+                key={category.id}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-white border border-emerald-100/60 rounded-2xl p-4 flex items-center justify-between group hover:border-emerald-200 transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600")}>
+                    <HiFilter size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-[#1A3320]">{category.name}</h3>
+                    <p className="text-[10px] text-[#5C7562] uppercase tracking-widest">{category.workshopCount || 0} Workshops Assigned</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold text-[#1A3320]">{category.name}</h3>
-                  <p className="text-[10px] text-[#5C7562] uppercase tracking-widest">{category.count} Items Assigned</p>
+                
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                  <button 
+                    onClick={() => handleDeleteClick(category.id)}
+                    className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <HiTrash size={16} />
+                  </button>
                 </div>
-              </div>
-              
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                <button 
-                  onClick={() => handleDeleteClick(category.id)}
-                  className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                >
-                  <HiTrash size={16} />
-                </button>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))
+          ) : (
+            <div className="col-span-full py-20 text-center bg-emerald-50/20 rounded-3xl border border-dashed border-emerald-100">
+              <p className="text-sm text-[#5C7562]">No categories found. Add your first one above.</p>
+            </div>
+          )}
         </div>
       </div>
 

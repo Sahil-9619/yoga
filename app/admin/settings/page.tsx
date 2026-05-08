@@ -43,9 +43,12 @@ export default function AdminSettings() {
       });
       setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err: any) {
+      const errorMessage = err.message === 'Failed to fetch'
+        ? 'Something went wrong. Please check your connection.'
+        : (err.message || 'Failed to update password');
       setStatus({
         type: 'error',
-        message: err.message || 'Failed to update password'
+        message: errorMessage
       });
     } finally {
       setIsSaving(false);

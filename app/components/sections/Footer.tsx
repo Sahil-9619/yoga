@@ -5,15 +5,16 @@ import { Sparkles, Mail, Phone, MapPin } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-
 import { InstagramIcon, FacebookIcon, YouTubeIcon } from '../ui/SocialIcons';
+import { useSocialLinks } from '../../hooks/useSocialLinks';
 
 export const Footer = () => {
+  const social = useSocialLinks();
 
   const socialLinks = [
-    { icon: InstagramIcon, label: "Instagram", color: "bg-pink-50 hover:bg-pink-100", textColor: "text-pink-600", href: "https://www.instagram.com/sargam.bhartiya" },
-    { icon: FacebookIcon, label: "Facebook", color: "bg-blue-50 hover:bg-blue-100", textColor: "text-blue-600", href: "https://www.facebook.com/sargam.bhartiya" },
-    { icon: YouTubeIcon, label: "YouTube", color: "bg-red-50 hover:bg-red-100", textColor: "text-red-600", href: "#" },
+    { icon: InstagramIcon, label: "Instagram", color: "bg-pink-50 hover:bg-pink-100", href: social.instagram },
+    { icon: FacebookIcon, label: "Facebook", color: "bg-blue-50 hover:bg-blue-100", href: social.facebook },
+    { icon: YouTubeIcon, label: "YouTube", color: "bg-red-50 hover:bg-red-100", href: social.youtube },
   ];
 
   return (
@@ -49,12 +50,13 @@ export const Footer = () => {
               {socialLinks.map((social, i) => (
                 <motion.a
                   key={i}
-                  href={social.href}
-                  target="_blank"
+                  href={social.href || '#'}
+                  onClick={(e) => { if (!social.href) e.preventDefault(); }}
+                  target={social.href ? '_blank' : undefined}
                   rel="noopener noreferrer"
                   whileHover={{ y: -5, scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`w-12 h-12 rounded-full ${social.color} flex items-center justify-center transition-all shadow-sm`}
+                  className={`w-12 h-12 rounded-full ${social.color} flex items-center justify-center transition-all shadow-sm ${!social.href ? 'opacity-40 cursor-not-allowed' : ''}`}
                 >
                   <social.icon />
                 </motion.a>

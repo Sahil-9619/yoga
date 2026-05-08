@@ -1,45 +1,42 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-  HiSave,
-  HiCheckCircle,
-  HiExclamationCircle
-} from 'react-icons/hi';
+import { HiSave, HiCheckCircle, HiExclamationCircle, HiRefresh } from 'react-icons/hi';
 import { cn } from '@/app/lib/utils';
-import {
-  FaInstagram,
-  FaFacebook,
-  FaYoutube
-} from 'react-icons/fa';
+import { FaInstagram, FaFacebook, FaYoutube } from 'react-icons/fa';
+import { SocialService, SocialLinks } from '@/app/services/social.service';
 
 export default function AdminSocialLinks() {
-  const [socials, setSocials] = useState({
-    facebook: 'https://facebook.com/sanctuary',
-    instagram: 'https://instagram.com/sanctuary',
-    youtube: 'https://youtube.com/sanctuary'
-  });
+  const [socials, setSocials] = useState<SocialLinks>({ facebook: '', instagram: '', youtube: '' });
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
+
+  const fetchLinks = async () => {
+    setIsLoading(true);
+    try {
+      const data = await SocialService.getLinks();
+      setSocials(data);
+    } catch (_) { }
+    finally { setIsLoading(false); }
+  };
+
+  useEffect(() => { fetchLinks(); }, []);
 
   const handleSave = async () => {
     setIsSaving(true);
     setStatus({ type: null, message: '' });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setStatus({ type: 'success', message: 'Social links updated successfully' });
+      const data = await SocialService.updateLinks(socials);
+      setSocials(data);
+      setStatus({ type: 'success', message: 'Social links updated successfully.' });
       setTimeout(() => setStatus({ type: null, message: '' }), 3000);
-    } catch (err) {
-      setStatus({ type: 'error', message: 'Failed to update links' });
+    } catch (err: any) {
+      setStatus({ type: 'error', message: err.message || 'Failed to update links.' });
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handleChange = (platform: keyof typeof socials, value: string) => {
-    setSocials(prev => ({ ...prev, [platform]: value }));
   };
 
   return (
@@ -47,23 +44,24 @@ export default function AdminSocialLinks() {
       <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-emerald-100/50 pb-6">
         <div>
           <h2 className="text-4xl font-serif text-[#1A3320]">Social Connectivity</h2>
-          <p className="text-base text-[#5C7562] mt-1">Manage your primary social media links.</p>
+          <p className="text-base text-[#5C7562] mt-1">Manage your primary social media links. Changes apply site-wide instantly.</p>
         </div>
-
-        <button
-          onClick={handleSave}
-          disabled={isSaving}
-          className="px-6 py-2.5 bg-[#1A3320] text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-emerald-900 transition-all shadow-md shadow-emerald-900/5 disabled:opacity-50"
-        >
-          {isSaving ? (
-            <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-          ) : (
-            <>
-              <HiSave size={16} />
-              Save Changes
-            </>
-          )}
-        </button>
+        <div className="flex gap-3">
+          <button onClick={fetchLinks} className="px-4 py-2.5 bg-white border border-emerald-100 text-emerald-700 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-emerald-50 transition-all">
+            <HiRefresh size={14} /> Refresh
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={isSaving || isLoading}
+            className="px-6 py-2.5 bg-[#1A3320] text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-emerald-900 transition-all shadow-md shadow-emerald-900/5 disabled:opacity-50"
+          >
+            {isSaving ? (
+              <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+            ) : (
+              <><HiSave size={16} /> Save Changes</>
+            )}
+          </button>
+        </div>
       </header>
 
       <div className="max-w-4xl space-y-4">
@@ -81,37 +79,41 @@ export default function AdminSocialLinks() {
           </motion.div>
         )}
 
-        <div className="space-y-4">
-          <SocialInput
-            icon={FaFacebook}
-            label="Facebook"
-            description="Your organization's public page URL"
-            value={socials.facebook}
-            onChange={(v: string) => handleChange('facebook', v)}
-            brandColor="#1877F2"
-            bgColor="bg-blue-50/50"
-          />
-
-          <SocialInput
-            icon={FaInstagram}
-            label="Instagram"
-            description="Your public handle or profile URL"
-            value={socials.instagram}
-            onChange={(v: string) => handleChange('instagram', v)}
-            brandColor="#E4405F"
-            bgColor="bg-pink-50/50"
-          />
-
-          <SocialInput
-            icon={FaYoutube}
-            label="YouTube"
-            description="Your official channel or playlist URL"
-            value={socials.youtube}
-            onChange={(v: string) => handleChange('youtube', v)}
-            brandColor="#FF0000"
-            bgColor="bg-red-50/50"
-          />
-        </div>
+        {isLoading ? (
+          <div className="py-20 flex justify-center">
+            <div className="w-6 h-6 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <SocialInput
+              icon={FaFacebook}
+              label="Facebook"
+              description="Your organization's public page URL"
+              value={socials.facebook}
+              onChange={(v: string) => setSocials(p => ({ ...p, facebook: v }))}
+              brandColor="#1877F2"
+              bgColor="bg-blue-50/50"
+            />
+            <SocialInput
+              icon={FaInstagram}
+              label="Instagram"
+              description="Your public handle or profile URL"
+              value={socials.instagram}
+              onChange={(v: string) => setSocials(p => ({ ...p, instagram: v }))}
+              brandColor="#E4405F"
+              bgColor="bg-pink-50/50"
+            />
+            <SocialInput
+              icon={FaYoutube}
+              label="YouTube"
+              description="Your official channel or playlist URL"
+              value={socials.youtube}
+              onChange={(v: string) => setSocials(p => ({ ...p, youtube: v }))}
+              brandColor="#FF0000"
+              bgColor="bg-red-50/50"
+            />
+          </div>
+        )}
       </div>
     </main>
   );
@@ -129,7 +131,6 @@ function SocialInput({ icon: Icon, label, description, value, onChange, brandCol
           <p className="text-[10px] text-[#5C7562] uppercase tracking-widest">{description}</p>
         </div>
       </div>
-
       <div className="flex-1">
         <input
           type="url"

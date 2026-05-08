@@ -19,7 +19,7 @@ export function Input({ label, icon, className, ...props }: InputProps) {
       <div className="relative">
         <input
           className={cn(
-            "w-full bg-[#FDFCF9] border border-emerald-100 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-500/30 transition-all text-[#1A3320] placeholder:text-[#5C7562]/30",
+            "w-full bg-[#FDFCF9] border border-emerald-100 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-500/30 transition-all text-black placeholder:text-[#5C7562]/30",
             icon && "pr-10",
             className
           )}
