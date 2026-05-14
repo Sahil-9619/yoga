@@ -1,18 +1,19 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 import { Sparkles, Heart, Shield, Users, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { CTAStrip } from '../components/sections/CTAStrip';
 import Link from 'next/link';
 
 export default function AboutPage() {
-  const fadeInUp = {
+  const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
   };
 
-  const stagger = {
+  const stagger: Variants = {
     visible: { transition: { staggerChildren: 0.15 } }
   };
 
