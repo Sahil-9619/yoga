@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from '../lib/api-config';
+import { DUMMY_WORKSHOPS } from '../lib/dummy-data';
 import { AuthService } from './auth.service';
 
 export interface WorkshopData {
@@ -21,10 +22,10 @@ export class WorkshopService {
       const response = await fetch(API_ENDPOINTS.GET_ALL_WORKSHOPS);
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Failed to fetch workshops');
-      return result.data;
+      return result.data?.length ? result.data : DUMMY_WORKSHOPS;
     } catch (error: any) {
       console.error('WorkshopService getAllWorkshops Error:', error);
-      throw error;
+      return DUMMY_WORKSHOPS;
     }
   }
 

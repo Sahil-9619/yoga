@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from '../lib/api-config';
+import { DUMMY_CATEGORIES } from '../lib/dummy-data';
 import { AuthService } from './auth.service';
 
 export class CategoryService {
@@ -7,10 +8,10 @@ export class CategoryService {
       const response = await fetch(API_ENDPOINTS.GET_ALL_CATEGORIES);
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Failed to fetch categories');
-      return result.data;
+      return result.data?.length ? result.data : DUMMY_CATEGORIES;
     } catch (error: any) {
       console.error('CategoryService getAllCategories Error:', error);
-      throw error;
+      return DUMMY_CATEGORIES;
     }
   }
 
