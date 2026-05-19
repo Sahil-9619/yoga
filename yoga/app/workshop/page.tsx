@@ -68,7 +68,7 @@ export default function WorkshopPage() {
 
     const handleWhatsAppRedirect = (e: React.FormEvent) => {
         e.preventDefault();
-        const phone = "918709162825";
+        const phone = "911234567890";
         const text = `Hi Sargam! My name is ${formData.name}. ${formData.message}`;
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
