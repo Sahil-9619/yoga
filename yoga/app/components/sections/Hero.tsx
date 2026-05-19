@@ -11,14 +11,14 @@ export const Hero = () => {
   const opacityHero = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <section className="relative min-h-[90vh] pt-32 pb-20 flex flex-col items-center justify-center overflow-hidden bg-[#EAF0E5]">
+    <section className="relative pt-40 pb-16 md:pt-32 md:pb-40 flex flex-col items-center justify-center overflow-hidden bg-[#EAF0E5]">
       <motion.div style={{ y: yHero, opacity: opacityHero }} className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-[#F4F7F2]/80 via-transparent to-[#F4F7F2] z-10"></div>
         <motion.img
           initial={{ scale: 1.05 }} animate={{ scale: 1 }} transition={{ duration: 2 }}
           src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&q=80"
           alt="Hero Background"
-          className="w-full h-full object-cover object-top opacity-60"
+          className="w-full h-full object-cover object-[65%_center] md:object-[center_top] opacity-60"
         />
       </motion.div>
 

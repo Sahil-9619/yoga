@@ -22,6 +22,66 @@ interface WorkshopDetailsModalProps {
 }
 
 export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: WorkshopDetailsModalProps) => {
+    const [timeLeft, setTimeLeft] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        if (!workshop || !isOpen) {
+            setTimeLeft(null);
+            return;
+        }
+
+        const calculateTimeLeft = () => {
+            try {
+                const dateObj = new Date(workshop.date);
+                const timeMatch = workshop.time?.match(/(\d+):(\d+)\s*(AM|PM)/i);
+                
+                if (timeMatch) {
+                    let hours = parseInt(timeMatch[1], 10);
+                    const minutes = parseInt(timeMatch[2], 10);
+                    const modifier = timeMatch[3].toUpperCase();
+                    
+                    if (hours === 12) hours = 0;
+                    if (modifier === 'PM') hours += 12;
+
+                    const now = new Date();
+                    const options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false } as const;
+                    const formatter = new Intl.DateTimeFormat('en-US', options);
+                    const parts = formatter.formatToParts(now);
+                    
+                    const getPart = (type: string) => parts.find(p => p.type === type)?.value;
+                    const nowIST = new Date(`${getPart('year')}-${getPart('month')}-${getPart('day')}T${getPart('hour')}:${getPart('minute')}:${getPart('second')}`);
+
+                    const wOptions = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' } as const;
+                    const wFormatter = new Intl.DateTimeFormat('en-US', wOptions);
+                    const wParts = wFormatter.formatToParts(dateObj);
+                    
+                    const wGetPart = (type: string) => wParts.find(p => p.type === type)?.value;
+                    const workshopDateLocal = new Date(`${wGetPart('year')}-${wGetPart('month')}-${wGetPart('day')}T${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`);
+                    
+                    const diff = workshopDateLocal.getTime() - nowIST.getTime();
+                    
+                    if (diff <= 0) {
+                        setTimeLeft("Started / Ended");
+                    } else {
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                        const mins = Math.floor((diff / 1000 / 60) % 60);
+                        
+                        if (days > 0) setTimeLeft(`Starts in ${days}d ${hrs}h`);
+                        else if (hrs > 0) setTimeLeft(`Starts in ${hrs}h ${mins}m`);
+                        else setTimeLeft(`Starts in ${mins}m`);
+                    }
+                }
+            } catch (e) {
+                setTimeLeft(null);
+            }
+        };
+
+        calculateTimeLeft();
+        const interval = setInterval(calculateTimeLeft, 60000);
+        return () => clearInterval(interval);
+    }, [workshop, isOpen]);
+
     if (!workshop) return null;
 
     const photoSrc = workshop.photo
@@ -76,6 +136,11 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                     <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${workshop.priceType === 'free' ? 'bg-emerald-400/90 text-white' : 'bg-amber-400/90 text-amber-900'}`}>
                                         {workshop.priceType === 'free' ? 'Free' : `₹${workshop.amount}`}
                                     </span>
+                                    {timeLeft && (
+                                        <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/90 backdrop-blur text-white text-[9px] font-bold uppercase tracking-widest border border-indigo-400/30 flex items-center gap-1.5 shadow-sm">
+                                            <Clock className="w-2.5 h-2.5" /> {timeLeft}
+                                        </span>
+                                    )}
                                 </div>
                                 <h2 className="text-xl sm:text-2xl font-serif text-white leading-snug">{workshop.title}</h2>
                             </div>
@@ -89,13 +154,13 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                     <Calendar className="w-3.5 h-3.5 text-emerald-600" />
                                     <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Date</span>
                                     <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">
-                                        {new Date(workshop.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                        {new Date(workshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
                                     </span>
                                 </div>
                                 <div className="flex flex-col items-center py-3 px-2 gap-1">
                                     <Clock className="w-3.5 h-3.5 text-emerald-600" />
                                     <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Time</span>
-                                    <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.time}</span>
+                                    <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.time} IST</span>
                                 </div>
                                 <div className="flex flex-col items-center py-3 px-2 gap-1">
                                     {workshop.mode === 'online' ? <Globe className="w-3.5 h-3.5 text-emerald-600" /> : <MapPin className="w-3.5 h-3.5 text-emerald-600" />}

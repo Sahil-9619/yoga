@@ -1,4 +1,5 @@
 require("dotenv").config();
+process.env.TZ = "Asia/Kolkata"; // Set default timezone to IST
 
 const path = require("path");
 const express = require("express");

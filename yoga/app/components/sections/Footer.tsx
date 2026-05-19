@@ -44,7 +44,7 @@ export const Footer = () => {
               <span className="font-serif tracking-widest uppercase text-[#1A3320] text-xl font-bold">Saargaamm bhartiye</span>
             </div>
             <p className="text-[#5C7562] font-light leading-relaxed">
-              Transforming lives through the ancient wisdom of Yoga and humanitarian service. Join our global family of mindful seekers.
+              Transforming lives through the ancient wisdom of Pranayama, Breathwork, and Meditation. Join our global family of mindful seekers.
             </p>
             <div className="flex gap-4 pt-2">
               {socialLinks.map((social, i) => (
@@ -70,9 +70,9 @@ export const Footer = () => {
             <ul className="space-y-4">
               {[
                 { name: 'Home', href: '/' },
-                { name: 'About Sargam', href: '/about' },
-                { name: 'Hatha Yoga', href: '/yoga/hatha' },
-                { name: 'Vinyasa Flow', href: '/yoga/vinyasa' },
+                { name: 'About Saargaamm', href: '/about' },
+                { name: 'Pranayama', href: '/yoga/pranayama' },
+                { name: 'Breathwork', href: '/yoga/breathwork' },
                 { name: 'Meditation', href: '/yoga/meditation' }
               ].map((link) => (
                 <li key={link.name}>
@@ -117,7 +117,7 @@ export const Footer = () => {
             <p className='opacity-70'>&copy; {new Date().getFullYear()} Saargaamm bhartiye. All rights reserved.</p>
             <div className="flex gap-2">
               <span>Designed by</span>
-              <span className="text-emerald-800/50 tracking-[0.3em]">Startup Web Support</span>
+              <Link href="https://startupwebsupport.com" target="_blank" rel="noopener noreferrer" className="text-emerald-800/50 tracking-[0.3em]">Startup Web Support</Link>
 
             </div>
           </div>

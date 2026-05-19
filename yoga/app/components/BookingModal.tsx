@@ -46,18 +46,34 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
         }
     }, [isOpen]);
 
-    const handleSendOtp = () => {
+    const handleSendOtp = async () => {
         if (!name.trim()) return setError('Please enter your name.');
         if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return setError('Please enter a valid email.');
         if (phone.length < 10) return setError('Please enter a valid 10-digit phone number.');
         setError('');
         setIsLoading(true);
-        setTimeout(() => { setIsLoading(false); setStep('otp'); }, 1000);
+        try {
+            await BookingService.sendOtp(email);
+            setStep('otp');
+        } catch (e: any) {
+            setError(e.message || 'Failed to send OTP.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleVerifyOtp = () => {
+    const handleVerifyOtp = async () => {
         setIsLoading(true);
-        setTimeout(() => { setIsLoading(false); setStep('payment'); }, 1200);
+        setError('');
+        try {
+            const otpString = otp.join('');
+            await BookingService.verifyOtp(email, otpString);
+            setStep('payment');
+        } catch (e: any) {
+            setError(e.message || 'Invalid or expired OTP.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handlePay = async () => {
@@ -171,9 +187,10 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                 {step === 'otp' && (
                                     <motion.div key="otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
                                         <div>
-                                            <h3 className="text-2xl font-serif text-[#1A3320] mb-1.5">Verify Identity</h3>
-                                            <p className="text-[#5C7562] text-xs font-light">Code sent to <span className="font-semibold text-emerald-700">{phone}</span></p>
+                                            <h3 className="text-2xl font-serif text-[#1A3320] mb-1.5">Verify Email</h3>
+                                            <p className="text-[#5C7562] text-xs font-light">Code sent to <span className="font-semibold text-emerald-700">{email}</span></p>
                                         </div>
+                                        {error && <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
                                         <div className="flex justify-between gap-3 py-2">
                                             {otp.map((digit, idx) => (
                                                 <input key={idx} id={`otp-${idx}`} type="text" maxLength={1}
@@ -251,7 +268,7 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                                 <Clock className="w-4 h-4 text-emerald-600" />
                                                 <div>
                                                     <div className="text-[8px] font-bold uppercase tracking-widest text-slate-400">Time</div>
-                                                    <div className="text-xs font-medium text-[#1A3320]">{workshop.time}</div>
+                                                    <div className="text-xs font-medium text-[#1A3320]">{workshop.time} IST</div>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">

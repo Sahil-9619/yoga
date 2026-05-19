@@ -71,7 +71,7 @@ export default function AdminWorkshops() {
   const fetchCategories = async () => {
     try {
       const data = await CategoryService.getAllCategories();
-      setCategories(data.map((c: any) => ({ label: c.name, value: c.id })));
+      setCategories(data.map((c: any) => ({ label: c.name, value: String(c.id) })));
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -288,11 +288,11 @@ export default function AdminWorkshops() {
               <div className="space-y-2.5 flex-1">
                 <div className="flex items-center gap-2 text-xs text-[#5C7562]">
                   <HiCalendar className="text-emerald-600/50" size={14} />
-                  {new Date(workshop.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  {new Date(workshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'long', day: 'numeric', year: 'numeric' })}
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#5C7562]">
                   <HiClock className="text-emerald-600/50" size={14} />
-                  {workshop.time}
+                  {workshop.time} IST
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#5C7562]">
                   {workshop.mode === 'online' ? (
@@ -499,7 +499,7 @@ export default function AdminWorkshops() {
                   <span className="text-[10px] uppercase font-bold text-[#1A3320]/40 tracking-widest">Date & Time</span>
                   <div className="text-sm text-[#1A3320] font-medium flex items-center gap-2">
                     <HiCalendar size={14} className="text-emerald-600" />
-                    {new Date(selectedWorkshop.date).toLocaleDateString()} at {selectedWorkshop.time}
+                    {new Date(selectedWorkshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' })} at {selectedWorkshop.time} IST
                   </div>
                 </div>
                 <div className="space-y-1">

@@ -77,7 +77,7 @@ export const Navbar = () => {
                 "nav-link-underline flex items-center gap-1.5 text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors",
                 isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]")
               )}>
-                Yoga <ChevronDown className={cn("w-3 h-3 transition-transform duration-300", isYogaHovered && "rotate-180")} />
+                Practices <ChevronDown className={cn("w-3 h-3 transition-transform duration-300", isYogaHovered && "rotate-180")} />
               </button>
 
               <AnimatePresence>
@@ -161,7 +161,7 @@ export const Navbar = () => {
 
             <div className="flex flex-col gap-8">
               <div className="space-y-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-600">Explore Yoga</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-600">Explore Practices</span>
                 {yogaSections.map((item) => (
                   <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-4 group">
                     <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-active:bg-emerald-600 group-active:text-white transition-colors">

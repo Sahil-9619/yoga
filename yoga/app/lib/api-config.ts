@@ -22,6 +22,8 @@ export const API_ENDPOINTS = {
 
   // Bookings
   CREATE_BOOKING: `${API_BASE_URL}/booking/create`,
+  SEND_OTP: `${API_BASE_URL}/booking/send-otp`,
+  VERIFY_OTP: `${API_BASE_URL}/booking/verify-otp`,
   GET_ALL_BOOKINGS: `${API_BASE_URL}/booking/all`,
   DELETE_BOOKING: (id: string | number) => `${API_BASE_URL}/booking/${id}`,
 

@@ -21,6 +21,28 @@ export class BookingService {
     return result;
   }
 
+  static async sendOtp(email: string) {
+    const response = await fetch(API_ENDPOINTS.SEND_OTP, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || 'Failed to send OTP');
+    return result;
+  }
+
+  static async verifyOtp(email: string, otp: string) {
+    const response = await fetch(API_ENDPOINTS.VERIFY_OTP, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || 'Invalid OTP');
+    return result;
+  }
+
   static async getAllBookings() {
     const token = AuthService.getToken();
     const response = await fetch(API_ENDPOINTS.GET_ALL_BOOKINGS, {

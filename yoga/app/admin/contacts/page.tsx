@@ -277,7 +277,7 @@ function ViewContactModal({ contact, onClose }: { contact: any; onClose: () => v
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-600/50 uppercase tracking-widest">
               <HiClock size={14} />
-              Received: {new Date(contact.createdAt).toLocaleString('en-IN', {
+              Received: {new Date(contact.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata',
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric',

@@ -145,7 +145,7 @@ export default function AdminDashboard() {
                       <motion.tr key={w.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="hover:bg-emerald-50/30 transition-colors">
                         <td className="px-6 py-3 font-medium text-[#1A3320] max-w-[180px] truncate">{w.title}</td>
                         <td className="px-4 py-3 text-[#5C7562] whitespace-nowrap text-xs">
-                          {new Date(w.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          {new Date(w.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest ${w.mode === 'online' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'}`}>{w.mode}</span>
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
                           {b.priceType === 'free' ? <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-emerald-50 text-emerald-600">Free</span> : `₹${b.amount}`}
                         </td>
                         <td className="px-4 py-3 text-[#5C7562] text-xs whitespace-nowrap">
-                          {new Date(b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {new Date(b.createdAt).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric' })}
                         </td>
                       </motion.tr>
                     ))}

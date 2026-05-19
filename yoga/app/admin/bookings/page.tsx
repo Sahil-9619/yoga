@@ -149,7 +149,7 @@ export default function AdminBookingsPage() {
                       <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-blue-50 text-blue-600">{b.status || 'confirmed'}</span>
                     </td>
                     <td className="px-6 py-4 text-xs text-[#5C7562] whitespace-nowrap">
-                      {new Date(b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {new Date(b.createdAt).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button

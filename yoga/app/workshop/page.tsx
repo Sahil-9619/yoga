@@ -109,7 +109,7 @@ export default function WorkshopPage() {
 
             {/* Workshop Cards List */}
             <section className="px-4 md:px-6 py-6 min-h-[400px]">
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-5xl mx-auto">
                     <div className="divide-y divide-emerald-50 border-t border-emerald-50">
                         {isLoading ? (
                             <div className="py-20 flex flex-col items-center justify-center gap-4">
@@ -155,11 +155,11 @@ export default function WorkshopPage() {
                                             <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-[#5C7562]">
                                                 <span className="flex items-center gap-1.5">
                                                     <Calendar className="w-3 h-3 text-emerald-500" />
-                                                    {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                    {new Date(item.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
                                                 </span>
                                                 <span className="flex items-center gap-1.5">
                                                     <Clock className="w-3 h-3 text-emerald-500" />
-                                                    {item.time}
+                                                    {item.time} IST
                                                 </span>
                                                 <span className="flex items-center gap-1.5">
                                                     {item.mode === 'online' ? <Globe className="w-3 h-3 text-emerald-500" /> : <MapPin className="w-3 h-3 text-emerald-500" />}
@@ -185,7 +185,7 @@ export default function WorkshopPage() {
                                         </div>
 
                                         {/* ── Desktop row ── */}
-                                        <div className="hidden md:flex items-center gap-10 px-2 group hover:bg-emerald-50/40 transition-all rounded-2xl cursor-pointer py-3" onClick={() => openDetails(item)}>
+                                        <div className="hidden md:flex items-center gap-6 px-2 group hover:bg-emerald-50/40 transition-all rounded-2xl cursor-pointer py-3" onClick={() => openDetails(item)}>
                                             {/* Thumbnail */}
                                             <div className="w-24 h-24 rounded-2xl overflow-hidden flex-none shadow-sm bg-emerald-50">
                                                 <img
@@ -196,11 +196,11 @@ export default function WorkshopPage() {
                                             </div>
 
                                             {/* Main info */}
-                                            <div className="flex-1 min-w-0">
+                                            <div className="flex-1 min-w-0 pr-8">
                                                 <div className="flex items-center gap-2 text-emerald-600 mb-1.5">
                                                     <Calendar className="w-3.5 h-3.5" />
                                                     <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700">
-                                                        {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                        {new Date(item.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
                                                     </span>
                                                     <span className="w-1 h-1 rounded-full bg-emerald-200" />
                                                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#5C7562]">{item.Category?.name}</span>
@@ -213,7 +213,7 @@ export default function WorkshopPage() {
                                             <div className="flex flex-col gap-2 min-w-[150px]">
                                                 <div className="flex items-center gap-2 text-xs text-[#1A3320]">
                                                     <Clock className="w-4 h-4 text-emerald-600" />
-                                                    <span className="font-medium">{item.time}</span>
+                                                    <span className="font-medium">{item.time} IST</span>
                                                 </div>
                                                 <div className="flex items-center gap-2 text-[11px] text-[#5C7562]">
                                                     {item.mode === 'online' ? <Globe className="w-4 h-4 opacity-40" /> : <MapPin className="w-4 h-4 opacity-40" />}

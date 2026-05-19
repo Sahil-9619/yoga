@@ -4,6 +4,8 @@ const controller = require('./booking.controller');
 const authMiddleware = require('../../middleware/auth.middleware');
 
 router.post('/create', controller.create);             // Public
+router.post('/send-otp', controller.sendOtp);          // Public
+router.post('/verify-otp', controller.verifyOtp);      // Public
 router.get('/all', authMiddleware, controller.getAll); // Admin only
 router.delete('/:id', authMiddleware, controller.remove); // Admin only
 
