@@ -26,6 +26,7 @@ const workshopRoutes = require("./modules/workshop/workshop.routes");
 const bookingRoutes  = require("./modules/booking/booking.routes");
 const socialRoutes   = require("./modules/social/social.routes");
 const videoRoutes    = require("./modules/video/video.routes");
+const testimonialRoutes = require("./modules/testimonial/testimonial.routes");
 
 // Routes
 app.use("/api/admin",    adminRoutes);
@@ -35,6 +36,7 @@ app.use("/api/workshop", workshopRoutes);
 app.use("/api/booking",  bookingRoutes);
 app.use("/api/social",   socialRoutes);
 app.use("/api/video",    videoRoutes);
+app.use("/api/testimonial", testimonialRoutes);
 
 
 app.get("/", (req, res) => {
@@ -42,6 +44,13 @@ app.get("/", (req, res) => {
         success: true,
         message: "Backend Running Successfully"
     });
+});
+
+app.use((err, req, res, next) => {
+    if (err) {
+        return res.status(400).json({ success: false, message: err.message });
+    }
+    next();
 });
 
 

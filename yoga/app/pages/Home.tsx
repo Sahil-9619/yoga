@@ -3,6 +3,7 @@ import React from 'react';
 import { Hero } from '../components/sections/Hero';
 import { Audience } from '../components/sections/Audience';
 import { About } from '../components/sections/About';
+import { CorporateWellness } from '../components/sections/CorporateWellness';
 import { Community } from '../components/sections/Community';
 import { FAQs } from '../components/sections/FAQs';
 import { Contact } from '../components/sections/Contact';
@@ -19,6 +20,7 @@ export default function Home() {
       <main>
         <Hero />
         <About />
+        <CorporateWellness />
         <Audience />
         <Community />
         <CTAStrip />

@@ -75,7 +75,7 @@ export default function AboutPage() {
       </section>
 
       {/* The Origin Section - White */}
-      <section className="py-32 px-6 bg-white relative">
+      <section className="pt-32 pb-16 px-6 bg-white relative">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div
@@ -85,8 +85,8 @@ export default function AboutPage() {
               <motion.span variants={fadeInUp} className="text-emerald-600 font-bold text-xs tracking-[0.4em] uppercase block">The Founder&apos;s Journey</motion.span>
               <div className="space-y-4">
                 <motion.h2 variants={fadeInUp} className="text-5xl md:text-6xl font-serif text-[#1A3320] leading-tight mb-2">
-                  From Service to <br />
-                  <span className="text-emerald-700 italic">Self-Discovery.</span>
+                  From Healing to <br />
+                  <span className="text-emerald-700 italic">Empowering Others.</span>
                 </motion.h2>
                 <motion.p variants={fadeInUp} className="text-emerald-800/60 font-medium italic text-lg border-l-2 border-emerald-200 pl-4">
                   &quot;In the smiles of those I serve, I found the silence I was seeking.&quot;
@@ -95,10 +95,13 @@ export default function AboutPage() {
 
               <motion.div variants={fadeInUp} className="space-y-6 text-[#3A5340] text-lg font-light leading-relaxed">
                 <p>
-                  Sargam, the founder of Saargaamm Bhartiye, has always believed that the truest form of spirituality is found in service. As a dedicated social worker, her mission began in the heart of India, where she spent years teaching and uplifting underprivileged children.
+                  Sargam is a dedicated Breathwork and Pranayama Healer whose journey began with her own profound healing. After facing a collapsed lung, asthma, and severe respiratory challenges, she turned to the ancient wisdom of pranayama, conscious breathing, meditation and natural healing. Through consistent practice, patience, and deep self-belief, she transformed her health, restored her vitality, and discovered the extraordinary healing power of the breath.
                 </p>
                 <p>
-                  It was through this selfless service that she discovered the profound power of Yoga and Breathwork—not just as a physical practice, but as a tool for resilience, healing, and absolute mental clarity.
+                  Today, Sargam is a certified Naturopathy and Yoga Coach, passionately guiding others on their own path to wellness. Her work is rooted in both personal experience and professional expertise, allowing her to support clients with compassion, authenticity, and deep understanding. She believes that the breath is one of the most powerful tools for healing—capable of restoring balance, calming the mind, strengthening the body, and awakening inner resilience.
+                </p>
+                <p>
+                  Through her personalized breathwork, pranayama, meditation, and holistic wellness programs, Sargam empowers people across the world to reconnect with their breath, reclaim their health, and experience greater peace, energy, and vitality. Her mission is simple yet profound: to help others heal, thrive, and discover the transformative power that already exists within them.
                 </p>
               </motion.div>
 
@@ -130,70 +133,81 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Healing Impact Section - Light Color (Soft Sage) */}
-      <section className="py-32 px-6 bg-[#F4F7F2] relative overflow-hidden rounded-t-[5rem]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white rounded-full blur-[120px] -z-0" />
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-20">
+      {/* Corporate Wellness Section */}
+      <section className="pt-10 pb-32 px-6 bg-[#F4F7F2] relative overflow-hidden rounded-t-[5rem]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
             <motion.span
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               className="text-emerald-600 font-bold text-xs tracking-[0.4em] uppercase mb-4 block"
             >
-              The Power of Healing
+              For Organizations
             </motion.span>
             <motion.h2
-              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-7xl font-serif leading-tight text-[#1A3320]"
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="text-5xl md:text-6xl font-serif text-[#1A3320] leading-tight mb-6"
             >
-              Bringing Souls Back <br />
-              <span className="text-emerald-700 italic">from the Brink.</span>
+              Corporate Wellness <br />
+              <span className="text-emerald-700 italic">Through Breathwork.</span>
             </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+              className="text-[#3A5340] text-lg font-light leading-relaxed max-w-4xl mx-auto"
+            >
+              Empower your workforce with science-backed wellness practices that restore calm, enhance focus, and build resilience. Our corporate wellness sessions combine the ancient wisdom of pranayama, breathwork, and meditation with modern workplace needs—helping employees manage stress, improve mental clarity, and cultivate emotional balance.
+              <br /><br />
+              In today&apos;s fast-paced corporate environment, employee well-being is not just a benefit—it is a necessity. Through guided breathing techniques, mindful meditation, and practical stress-management tools, we help teams reduce anxiety, increase productivity, and foster a healthier, more harmonious workplace culture.
+            </motion.p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-20">
+            {/* Why Corporate Wellness Matters */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white border border-emerald-100 p-12 rounded-[3.5rem] space-y-6 shadow-sm"
+              initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              className="bg-[#F4F7F2] p-10 md:p-14 rounded-[3rem]"
             >
-              <h3 className="text-3xl font-serif text-emerald-900">A Journey of Recovery</h3>
-              <p className="text-[#3A5340] text-lg font-light leading-relaxed">
-                Sargam&apos;s journey is marked by stories that many would call miracles. Through the precise application of Pranayama and specialized Kriya Yoga, she has guided numerous individuals back from the brink of severe health crises.
-              </p>
-              <p className="text-[#3A5340] text-lg font-light leading-relaxed">
-                From patients struggling with chronic, life-threatening conditions to those facing absolute mental collapse, her interventions have served as a lifeline. She has helped people literally &quot;come back from the mouth of death,&quot; reclaiming their vitality when medical science reached its limits.
-              </p>
+              <h3 className="text-3xl font-serif text-[#1A3320] mb-8">Why Corporate Wellness Matters</h3>
+              <ul className="space-y-5">
+                {[
+                  "Reduces workplace stress and burnout",
+                  "Enhances focus, creativity, and decision-making",
+                  "Improves emotional resilience and mental clarity",
+                  "Promotes better energy, sleep, and overall well-being",
+                  "Strengthens team connection and workplace morale"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4">
+                    <CheckCircle2 className="w-6 h-6 text-emerald-600 flex-none mt-0.5" />
+                    <span className="text-[#3A5340] font-light text-lg">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </motion.div>
 
-            <div className="space-y-8">
-              {[
-                { title: "Critical Recovery", desc: "Assisting patients in regaining lung and heart function through rhythmic breathwork." },
-                { title: "Mental Resilience", desc: "Lifting individuals from deep depression and absolute mental burnout using meditative stillness." },
-                { title: "Chronic Relief", desc: "Providing hope and physical ease to those suffering from long-term autoimmune and respiratory issues." }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
-                  className="flex gap-6"
-                >
-                  <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center flex-none border border-emerald-100 shadow-sm">
-                    <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold text-[#1A3320] mb-2">{item.title}</h4>
-                    <p className="text-[#4A6350] font-light leading-relaxed">{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-20 text-center">
-            <p className="text-[#5C7562] italic text-lg max-w-3xl mx-auto leading-relaxed">
-              &quot;My motive is not just to teach yoga, but to prove that the human breath is the ultimate healer, capable of restoring life even in its most fragile state.&quot;
-              <br />
-              <span className="text-emerald-700 font-bold not-italic block mt-4 uppercase tracking-[0.2em] text-sm">— Sargam</span>
-            </p>
+            {/* Our Offerings */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+              className="bg-[#1A3320] text-white p-10 md:p-14 rounded-[3rem] shadow-xl shadow-emerald-900/10"
+            >
+              <h3 className="text-3xl font-serif text-white mb-8">Our Offerings</h3>
+              <ul className="space-y-6">
+                {[
+                  { title: "Breathwork Sessions", desc: "for stress relief and energy balance" },
+                  { title: "Pranayama Practices", desc: "for respiratory health and emotional stability" },
+                  { title: "Meditation Programs", desc: "for mindfulness, focus, and inner calm" },
+                  { title: "Customized Wellness Workshops", desc: "tailored to your organization's needs" },
+                  { title: "Online and On-Site Sessions", desc: "for teams across the globe" }
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4">
+                    <Sparkles className="w-6 h-6 text-emerald-400 flex-none mt-0.5" />
+                    <div>
+                      <span className="font-bold text-white block text-lg">{item.title}</span>
+                      <span className="text-emerald-100/70 font-light text-base">{item.desc}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
         </div>
       </section>

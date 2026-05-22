@@ -20,7 +20,8 @@ import {
   HiAcademicCap,
   HiMenu,
   HiMail,
-  HiCollection
+  HiCollection,
+  HiStar
 } from 'react-icons/hi';
 import { FaFacebookF } from 'react-icons/fa';
 import { cn } from '../../lib/utils';
@@ -40,6 +41,7 @@ export const menuItems = [
   { name: 'Categories', href: '/admin/categories', icon: HiCollection },
   { name: 'Contacts', href: '/admin/contacts', icon: HiMail },
   { name: 'Videos', href: '/admin/videos', icon: HiVideoCamera },
+  { name: 'Testimonials', href: '/admin/testimonials', icon: HiStar },
   { name: 'Social Links', href: '/admin/social', icon: HiGlobeAlt },
   { name: 'Settings', href: '/admin/settings', icon: HiCog },
 ];

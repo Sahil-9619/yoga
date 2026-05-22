@@ -36,4 +36,10 @@ export const API_ENDPOINTS = {
   CREATE_VIDEO: `${API_BASE_URL}/video/create`,
   UPDATE_VIDEO: (id: string | number) => `${API_BASE_URL}/video/${id}`,
   DELETE_VIDEO: (id: string | number) => `${API_BASE_URL}/video/${id}`,
+
+  // Testimonials
+  GET_ALL_TESTIMONIALS: `${API_BASE_URL}/testimonial/all`,
+  CREATE_TESTIMONIAL: `${API_BASE_URL}/testimonial/create`,
+  UPDATE_TESTIMONIAL: (id: string | number) => `${API_BASE_URL}/testimonial/${id}`,
+  DELETE_TESTIMONIAL: (id: string | number) => `${API_BASE_URL}/testimonial/${id}`,
 };

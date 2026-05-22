@@ -19,13 +19,13 @@ export interface WorkshopData {
 export class WorkshopService {
   static async getAllWorkshops() {
     try {
-      const response = await fetch(API_ENDPOINTS.GET_ALL_WORKSHOPS);
+      const response = await fetch(API_ENDPOINTS.GET_ALL_WORKSHOPS, { cache: 'no-store' });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Failed to fetch workshops');
-      return result.data?.length ? result.data : DUMMY_WORKSHOPS;
+      return result.data || [];
     } catch (error: any) {
       console.error('WorkshopService getAllWorkshops Error:', error);
-      return DUMMY_WORKSHOPS;
+      return [];
     }
   }
 

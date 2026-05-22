@@ -246,7 +246,7 @@ export default function AdminWorkshops() {
               transition={{ delay: index * 0.1 }}
               className="bg-white border border-emerald-100 rounded-md p-6 shadow-sm hover:shadow-md transition-all group relative overflow-hidden flex flex-col"
             >
-              <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2 z-10">
+              <div className="absolute top-0 right-0 p-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex gap-2 z-10">
                 <button
                   onClick={() => handleViewClick(workshop)}
                   className="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors"

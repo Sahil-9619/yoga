@@ -6,11 +6,11 @@ const otpStore = new Map(); // Simple in-memory store for OTPs: email -> { otp, 
 
 const create = async (req, res) => {
     try {
-        const { name, email, phone, workshopId, workshopTitle, amount, priceType } = req.body;
+        const { name, email, phone, workshopId, workshopTitle, categoryName, amount, priceType } = req.body;
         if (!name || !email || !phone || !workshopId) {
             return res.status(400).json({ success: false, message: 'Name, email, phone and workshopId are required.' });
         }
-        const data = await service.createBooking({ name, email, phone, workshopId, workshopTitle, amount, priceType });
+        const data = await service.createBooking({ name, email, phone, workshopId, workshopTitle, categoryName, amount, priceType });
         return res.status(201).json({ success: true, data });
     } catch (error) {
         return res.status(400).json({ success: false, message: error.message });

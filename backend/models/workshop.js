@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static associate(models) {
       Workshop.belongsTo(models.Category, { foreignKey: 'categoryId' });
-      Workshop.hasMany(models.Booking, { foreignKey: 'workshopId' });
+      Workshop.hasMany(models.Booking, { foreignKey: 'workshopId', onDelete: 'SET NULL' });
     }
   }
   Workshop.init({

@@ -1,8 +1,8 @@
 const {
     Workshop,
-    Category
+    Category,
+    Booking
 } = require("../../models");
-
 
 // Create Workshop
 const createWorkshop = async (data) => {

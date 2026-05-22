@@ -26,18 +26,18 @@ export const About = () => {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-          <span className="text-emerald-600 font-bold text-xs tracking-[0.3em] uppercase mb-4 block">The Mission of Service</span>
-          <h2 className="text-4xl md:text-5xl font-serif text-[#1A3320] mb-8 leading-tight">Empowering lives through <br />Yoga and Compassion.</h2>
+          <span className="text-emerald-600 font-bold text-xs tracking-[0.3em] uppercase mb-4 block">The Founder's Journey</span>
+          <h2 className="text-4xl md:text-5xl font-serif text-[#1A3320] mb-8 leading-tight">From Healing to <br />Empowering Others.</h2>
 
           <div className="space-y-6 text-lg text-[#4A6350] font-light leading-relaxed">
             <p>
-              Sargam is a dedicated Yoga, Pranayama, and Meditation coach whose journey is fueled by a deep commitment to social welfare. Beyond the mat, she is a passionate social worker who spends her time teaching and uplifting underprivileged children across India.
+              Sargam is a dedicated Breathwork and Pranayama Healer whose journey began with her own profound healing. After facing a collapsed lung, asthma, and severe respiratory challenges, she turned to the ancient wisdom of pranayama, conscious breathing, meditation and natural healing.
             </p>
             <p>
-              Her approach to coaching is unique—she believes that true mindfulness begins with service. By bringing the life-changing tools of Breathwork and Yoga to both corporate professionals and the children in need, she is creating a ripple effect of healing and consciousness.
+              Through consistent practice, patience, and deep self-belief, she transformed her health, restored her vitality, and discovered the extraordinary healing power of the breath.
             </p>
             <p>
-              Through Saargaamm Bhartiye, Sargam invites you to join a journey that transcends physical fitness. It is a path toward self-discovery, mental resilience, and a life lived with purpose and compassion.
+              Today, Sargam is a certified Naturopathy and Yoga Coach, passionately guiding others on their own path to wellness. She believes that the breath is one of the most powerful tools for healing—capable of restoring balance, calming the mind, strengthening the body, and awakening inner resilience.
             </p>
           </div>
 
@@ -88,8 +88,8 @@ export const About = () => {
 
             <Link href="/about" className="w-full sm:w-auto flex justify-center sm:justify-end">
               <Button variant="ghost" className="text-emerald-700 font-bold uppercase tracking-widest text-[10px] sm:text-xs gap-2 group whitespace-nowrap px-2 sm:px-4">
-                <span className="hidden sm:inline">Learn more</span>
-                <span className="sm:hidden">Learn more</span>
+                <span className="hidden sm:inline">Read more</span>
+                <span className="sm:hidden">Read more</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>

@@ -137,7 +137,10 @@ export default function AdminBookingsPage() {
                     </td>
                     <td className="px-6 py-4 text-sm text-[#5C7562]">{b.email}</td>
                     <td className="px-6 py-4 text-sm text-emerald-600 font-medium">{b.phone}</td>
-                    <td className="px-6 py-4 text-sm text-[#5C7562] max-w-[180px] truncate">{b.workshopTitle || b.Workshop?.title || '—'}</td>
+                    <td className="px-6 py-4 max-w-[180px]">
+                      <div className="font-bold text-[#1A3320] text-sm truncate">{b.workshopTitle || b.Workshop?.title || '—'}</div>
+                      <div className="text-[9px] uppercase tracking-widest text-[#5C7562] truncate">{b.categoryName || b.Workshop?.Category?.name || '—'}</div>
+                    </td>
                     <td className="px-6 py-4">
                       {b.priceType === 'free' ? (
                         <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-emerald-50 text-emerald-600">Free</span>

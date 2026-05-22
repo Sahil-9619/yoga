@@ -151,7 +151,7 @@ export default function AdminCategories() {
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all">
                   <button 
                     onClick={() => handleDeleteClick(category.id)}
                     className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -174,7 +174,7 @@ export default function AdminCategories() {
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={confirmDelete}
         title="Delete Category"
-        message="Are you sure you want to delete this category? This will affect how your content is organized."
+        message="Are you sure you want to delete this category? All workshops associated with this category will also be permanently deleted."
       />
     </main>
   );

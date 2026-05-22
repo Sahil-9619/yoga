@@ -84,6 +84,7 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                 name, email, phone,
                 workshopId: workshop.id ?? 0,
                 workshopTitle: workshop.title,
+                categoryName: (workshop as any).Category?.name,
                 amount: workshop.amount,
                 priceType: workshop.priceType,
             });

@@ -5,13 +5,13 @@ import { AuthService } from './auth.service';
 export class CategoryService {
   static async getAllCategories() {
     try {
-      const response = await fetch(API_ENDPOINTS.GET_ALL_CATEGORIES);
+      const response = await fetch(API_ENDPOINTS.GET_ALL_CATEGORIES, { cache: 'no-store' });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Failed to fetch categories');
-      return result.data?.length ? result.data : DUMMY_CATEGORIES;
+      return result.data || [];
     } catch (error: any) {
       console.error('CategoryService getAllCategories Error:', error);
-      return DUMMY_CATEGORIES;
+      return [];
     }
   }
 

@@ -8,6 +8,7 @@ import {
     Users,
     ArrowRight,
     Sparkles,
+    Star,
     RefreshCw,
     MessageCircle,
     Send,
@@ -24,6 +25,9 @@ import { BASE_URL } from '../lib/api-config';
 export default function WorkshopPage() {
     const [workshops, setWorkshops] = useState<any[]>([]);
     const [categories, setCategories] = useState<string[]>(["All"]);
+    const [testimonials, setTestimonials] = useState<any[]>([]);
+    const textAndImageTestimonials = testimonials.filter(t => t.type !== 'video');
+    const videoTestimonials = testimonials.filter(t => t.type === 'video');
     const [isLoading, setIsLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState("All");
     const [formData, setFormData] = useState({ name: '', message: '' });
@@ -34,12 +38,14 @@ export default function WorkshopPage() {
     const fetchData = async () => {
         setIsLoading(true);
         try {
-            const [workshopData, categoryData] = await Promise.all([
+            const [workshopData, categoryData, testimonialData] = await Promise.all([
                 WorkshopService.getAllWorkshops(),
-                CategoryService.getAllCategories()
+                CategoryService.getAllCategories(),
+                import('../services/testimonial.service').then(m => m.TestimonialService.getAllTestimonials())
             ]);
             setWorkshops(workshopData);
             setCategories(["All", ...categoryData.map((c: any) => c.name)]);
+            setTestimonials(testimonialData);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -254,84 +260,222 @@ export default function WorkshopPage() {
                 </div>
             </section>
 
-            {/* Past Vibrations Gallery */}
-            <section className="py-20 px-6 bg-white">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-serif text-[#1A3320] mb-4 text-slate-800">Past <span className="text-emerald-700 italic">Vibrations.</span></h2>
-                        <p className="text-[#5C7562] text-base md:text-lg font-light max-w-xl mx-auto">A glimpse into the energy shared in our previous gatherings.</p>
+            {/* Testimonials & Videos */}
+            <section className="py-24 px-6 relative overflow-hidden bg-[#FAFCF8]">
+                {/* Professional Geometric Background Elements */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+                    {/* Top Right Grid/Lines */}
+                    <div className="absolute -top-24 -right-24 opacity-[0.03]">
+                        <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1A3320" strokeWidth="1"/>
+                                </pattern>
+                            </defs>
+                            <rect width="400" height="400" fill="url(#grid)" />
+                        </svg>
+                    </div>
+                    
+                    {/* Left side elegant curve */}
+                    <div className="absolute top-[20%] -left-64 opacity-[0.07]">
+                        <svg width="600" height="800" viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 0C100 200 500 200 500 400C500 600 100 600 100 800" stroke="#059669" strokeWidth="2"/>
+                            <path d="M150 0C150 200 550 200 550 400C550 600 150 600 150 800" stroke="#059669" strokeWidth="2"/>
+                            <path d="M200 0C200 200 600 200 600 400C600 600 200 600 200 800" stroke="#059669" strokeWidth="2"/>
+                        </svg>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[280px]">
-                        <div className="col-span-2 row-span-2 rounded-[2.5rem] overflow-hidden group relative">
-                            <img src="/images/gallery/retreat.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Retreat" />
-                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span className="text-white text-[10px] font-bold uppercase tracking-[0.3em]">Himalayan Rituals</span>
+                    {/* Bottom Right decorative circle outlines */}
+                    <div className="absolute -bottom-40 -right-40 opacity-[0.05]">
+                        <svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="300" cy="300" r="250" stroke="#1A3320" strokeWidth="1" strokeDasharray="4 4"/>
+                            <circle cx="300" cy="300" r="200" stroke="#059669" strokeWidth="1"/>
+                            <circle cx="300" cy="300" r="150" stroke="#1A3320" strokeWidth="1" strokeDasharray="4 4"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-20"
+                    >
+                        <span className="text-emerald-600 font-bold text-[10px] tracking-[0.4em] uppercase mb-4 block">Community Stories</span>
+                        <h2 className="text-4xl md:text-6xl font-serif text-[#1A3320] mb-6 leading-tight">Kind <span className="text-emerald-700 italic">Words.</span></h2>
+                        <p className="text-[#5C7562] text-lg font-light max-w-2xl mx-auto">Real stories of healing, transformation, and inner peace from our beautiful global community.</p>
+                    </motion.div>
+
+                    {textAndImageTestimonials.length > 0 && (
+                        <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8 mb-24">
+                            {textAndImageTestimonials.map((testimonial, index) => (
+                                <motion.div 
+                                    key={testimonial.id || index}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                                    className="break-inside-avoid relative bg-white rounded-xl p-8 md:p-10 border border-slate-200 hover:border-emerald-200 shadow-sm hover:shadow-xl transition-all duration-500 group flex flex-col overflow-hidden"
+                                >
+                                    {/* Curved Lines Background Pattern */}
+                                    <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.08]">
+                                        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                            <defs>
+                                                <pattern id="curves" width="200" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                                                    <path d="M0 40 Q 50 80 100 40 T 200 40" fill="none" stroke="#059669" strokeWidth="1.5" />
+                                                    <path d="M0 60 Q 50 100 100 60 T 200 60" fill="none" stroke="#059669" strokeWidth="1.5" />
+                                                </pattern>
+                                            </defs>
+                                            <rect width="100%" height="100%" fill="url(#curves)" />
+                                        </svg>
+                                    </div>
+
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600 rounded-t-xl scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 z-20"></div>
+                                    
+                                    <div className="flex text-amber-400 mb-6 gap-1 relative z-10">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                        ))}
+                                    </div>
+                                    
+                                    {testimonial.type === 'image' && testimonial.mediaUrl && (
+                                        <div className="w-full rounded-lg overflow-hidden mb-6 relative z-10 bg-slate-50 flex items-center justify-center border border-slate-100">
+                                            <img src={testimonial.mediaUrl.startsWith('http') ? testimonial.mediaUrl : `${BASE_URL}${testimonial.mediaUrl}`} alt="testimonial" className="w-full h-auto max-h-64 object-contain" />
+                                        </div>
+                                    )}
+                                    {testimonial.text && (
+                                        <p className="text-sm md:text-base text-slate-600 font-light leading-relaxed mb-8 relative">
+                                            <span className="text-4xl text-slate-200 absolute -top-3 -left-2 font-serif leading-none">&ldquo;</span>
+                                            <span className="relative z-10">{testimonial.text}</span>
+                                        </p>
+                                    )}
+                                    
+                                    {testimonial.type === 'text' && (
+                                        <div className="flex items-center gap-4 mt-auto pt-6 border-t border-slate-100 relative z-10">
+                                            <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700 font-serif text-xl uppercase">
+                                                {(testimonial.name || '?').charAt(0).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <div className="font-bold text-slate-800 text-sm">{testimonial.name || 'Anonymous'}</div>
+                                                {testimonial.location && <div className="text-xs text-slate-500 uppercase tracking-wider mt-0.5">{testimonial.location}</div>}
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
+
+                    {videoTestimonials.length > 0 && (
+                        <div className="mt-32">
+                            <motion.div 
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="text-center mb-12"
+                            >
+                                <h3 className="text-3xl md:text-4xl font-serif text-[#1A3320] mb-3">Video <span className="text-emerald-700 italic">Experiences.</span></h3>
+                                <p className="text-[#5C7562] text-base font-light">Watch and listen to the transformative journeys.</p>
+                            </motion.div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                                {videoTestimonials.map((video, i) => (
+                                    <motion.div 
+                                        key={video.id}
+                                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5, delay: i * 0.1 }}
+                                        className="relative aspect-[4/5] md:aspect-video rounded-xl overflow-hidden group shadow-lg shadow-emerald-900/10 border border-emerald-900/20 bg-[#0A1A12]"
+                                    >
+                                        <video 
+                                            src={video.mediaUrl.startsWith('http') ? video.mediaUrl : `${BASE_URL}${video.mediaUrl}`}
+                                            className="w-full h-full object-contain relative z-20"
+                                            controls
+                                            preload="metadata"
+                                        />
+                                        
+                                        {video.text && (
+                                            <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent z-30">
+                                                <p className="text-white text-sm font-light">"{video.text}"</p>
+                                                {/* No name or location rendered for videos per request */}
+                                            </div>
+                                        )}
+
+                                        <div className="absolute inset-0 z-10 pointer-events-none opacity-[0.15]">
+                                            {/* Curved Lines Background Pattern */}
+                                            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                                <defs>
+                                                    <pattern id={`curves-video-${video.id}`} width="200" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(-25)">
+                                                        <path d="M0 40 Q 50 80 100 40 T 200 40" fill="none" stroke="#10b981" strokeWidth="1.5" />
+                                                        <path d="M0 60 Q 50 100 100 60 T 200 60" fill="none" stroke="#10b981" strokeWidth="1.5" />
+                                                    </pattern>
+                                                </defs>
+                                                <rect width="100%" height="100%" fill={`url(#curves-video-${video.id})`} />
+                                            </svg>
+                                        </div>
+                                    </motion.div>
+                                ))}
                             </div>
                         </div>
-                        <div className="rounded-[2.5rem] overflow-hidden group relative">
-                            <img src="/images/gallery/meditation.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Meditation" />
-                        </div>
-                        <div className="rounded-[2.5rem] overflow-hidden group relative">
-                            <img src="/images/gallery/zen.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Zen" />
-                        </div>
-                        <div className="rounded-[2.5rem] overflow-hidden group relative">
-                            <img src="/images/gallery/pranayama.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Pranayama" />
-                        </div>
-                        <div className="rounded-[2.5rem] overflow-hidden group relative">
-                            <img src="/images/gallery/yoga.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Yoga" />
-                        </div>
-                    </div>
+                    )}
                 </div>
             </section>
 
             {/* Custom Session Form */}
-            <section className="py-20 px-6">
+            <section className="py-24 px-6 relative bg-white">
                 <div className="max-w-7xl mx-auto">
-                    <div className="bg-[#EAF0E5]/40 rounded-[4rem] p-10 md:p-20 border border-emerald-100/50 relative overflow-hidden">
+                    <div className="bg-[#0A1A12] rounded-2xl p-8 md:p-16 relative overflow-hidden shadow-2xl">
+                        {/* Background Geometric Elements for Dark Theme */}
+                        <div className="absolute top-0 right-0 w-[500px] h-[500px] border-[40px] border-emerald-900/20 rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] border-[2px] border-emerald-800/30 rounded-full -translate-x-1/4 translate-y-1/4 pointer-events-none"></div>
+                        <div className="absolute top-1/2 left-1/4 w-[1px] h-[800px] bg-gradient-to-b from-transparent via-emerald-800/50 to-transparent -translate-y-1/2 rotate-45 pointer-events-none"></div>
+
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
                             <div>
-                                <span className="text-emerald-600 font-bold text-[10px] tracking-[0.4em] uppercase mb-4 block">Tailored Experiences</span>
-                                r                               <h2 className="text-4xl md:text-5xl font-serif text-[#1A3320] mb-6 leading-tight text-slate-800">Need a <br /><span className="text-emerald-700 italic">Custom Session?</span></h2>
-                                <p className="text-[#5C7562] font-light leading-relaxed mb-8">
-                                    Whether it&apos;s for a corporate retreat, a private group, or a deep-dive individual journey, we design sessions that meet your specific vibration and goals.
+                                <span className="text-emerald-400 font-bold text-[10px] tracking-[0.4em] uppercase mb-6 block">Tailored Experiences</span>
+                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-6 leading-tight">Design Your <br /><span className="text-emerald-300 italic font-light">Custom Journey.</span></h2>
+                                <p className="text-emerald-100/70 font-light leading-relaxed mb-10 text-lg">
+                                    Whether it's for a corporate retreat, a private group, or a deep-dive individual journey, we curate sessions that perfectly align with your specific vibration and goals.
                                 </p>
-                                <div className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-emerald-100 w-fit shadow-sm">
-                                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-                                        <MessageCircle className="w-5 h-5" />
+                                
+                                <div className="flex items-center gap-5 p-5 rounded-xl bg-white/5 border border-white/10 w-fit backdrop-blur-md">
+                                    <div className="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-300 border border-emerald-500/30">
+                                        <MessageCircle className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest">Connect Directly</div>
-                                        <div className="text-xs text-[#5C7562]">Instant response on WhatsApp</div>
+                                        <div className="text-[10px] font-bold text-emerald-300 uppercase tracking-widest mb-1">Direct Consultation</div>
+                                        <div className="text-sm text-emerald-100/60 font-light">Instant response on WhatsApp</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <form onSubmit={handleWhatsAppRedirect} className="space-y-4">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A3320] ml-2">Your Name</label>
+                            <form onSubmit={handleWhatsAppRedirect} className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-2xl space-y-6">
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Your Full Name</label>
                                     <input
                                         required
                                         type="text"
                                         placeholder="E.g. Arnav Sharma"
-                                        className="w-full px-6 py-4 rounded-2xl bg-white border border-emerald-100 focus:outline-none focus:border-emerald-500 transition-colors text-sm text-slate-800 placeholder:text-emerald-900/40"
+                                        className="w-full px-5 py-4 rounded-xl bg-[#0F241A] border border-emerald-900/50 focus:outline-none focus:border-emerald-500 transition-colors text-sm text-white placeholder:text-emerald-100/20"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#1A3320] ml-2">Your Message</label>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Your Vision / Message</label>
                                     <textarea
                                         required
                                         placeholder="Tell us a bit about what you're looking for..."
-                                        className="w-full px-6 py-4 rounded-2xl bg-white border border-emerald-100 focus:outline-none focus:border-emerald-500 transition-colors text-sm min-h-[120px] resize-none text-slate-800 placeholder:text-emerald-900/40"
+                                        className="w-full px-5 py-4 rounded-xl bg-[#0F241A] border border-emerald-900/50 focus:outline-none focus:border-emerald-500 transition-colors text-sm min-h-[140px] resize-none text-white placeholder:text-emerald-100/20"
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                     />
                                 </div>
-                                <Button variant="premium" type="submit" className="w-full py-6 rounded-2xl uppercase tracking-widest text-xs font-bold gap-3 group">
+                                <button type="submit" className="w-full py-5 rounded-xl bg-emerald-600 text-white uppercase tracking-widest text-xs font-bold gap-3 flex items-center justify-center hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-900/50 group">
                                     Send on WhatsApp <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                </Button>
+                                </button>
                             </form>
                         </div>
                     </div>

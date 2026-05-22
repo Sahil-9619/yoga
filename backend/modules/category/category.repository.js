@@ -40,6 +40,11 @@ const getCategoryById = async (id) => {
 // Delete Category
 const deleteCategory = async (id) => {
 
+    // Cascade delete associated workshops
+    await Workshop.destroy({
+        where: { categoryId: id }
+    });
+
     return await Category.destroy({
         where: { id }
     });

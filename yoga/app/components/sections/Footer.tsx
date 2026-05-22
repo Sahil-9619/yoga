@@ -107,7 +107,7 @@ export const Footer = () => {
           <div>
             <h4 className="font-serif text-[#1A3320] text-lg font-semibold mb-6">Our Motive</h4>
             <p className="text-[#5C7562] text-sm font-light italic leading-relaxed">
-              &quot;To prove that the human breath is the ultimate healer and to uplift every soul we touch through service and yoga.&quot;
+              &quot;Empowering souls to reclaim their health, vitality, and inner peace through the extraordinary healing power of conscious breathing and ancient yogic wisdom.&quot;
             </p>
           </div>
         </div>
