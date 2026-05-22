@@ -8,6 +8,7 @@ export class BookingService {
     phone: string;
     workshopId: number | string;
     workshopTitle?: string;
+    categoryName?: string;
     amount?: number | string;
     priceType?: string;
   }) {
