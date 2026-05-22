@@ -31,6 +31,19 @@ const connectDB = async () => {
         await db.sequelize.sync({ alter: true });
         console.log("Database synced successfully");
 
+        // Auto-seed default admin if no admin exists
+        const bcrypt = require('bcrypt');
+        const adminCount = await db.Admin.count();
+        if (adminCount === 0) {
+            const hashedPassword = await bcrypt.hash('admin@yoga', 10);
+            await db.Admin.create({
+                name: 'Super Admin',
+                email: 'admin@yoga.in',
+                password: hashedPassword
+            });
+            console.log("Default Admin created!");
+        }
+
     } catch (error) {
         console.error("Database Connection Failed:", error.message);
         process.exit(1);
