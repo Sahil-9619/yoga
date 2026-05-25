@@ -17,7 +17,7 @@ export const About = () => {
           whileHover={{ scale: 1.02 }}
           className="relative rounded-[3rem] overflow-hidden aspect-[4/5] shadow-2xl transition-transform duration-500"
         >
-          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80" alt="Sargam" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110" />
+          <img src="/images/profile.jpeg" alt="Sargam" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
           <div className="absolute bottom-8 left-8 right-8 text-white">
             <h3 className="text-3xl font-serif mb-1">Sargam</h3>
