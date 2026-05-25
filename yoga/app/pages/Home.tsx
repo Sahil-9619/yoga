@@ -3,11 +3,12 @@ import React from 'react';
 import { Hero } from '../components/sections/Hero';
 import { Audience } from '../components/sections/Audience';
 import { About } from '../components/sections/About';
-import { CorporateWellness } from '../components/sections/CorporateWellness';
 import { Community } from '../components/sections/Community';
 import { FAQs } from '../components/sections/FAQs';
 import { Contact } from '../components/sections/Contact';
 import { CTAStrip } from '../components/sections/CTAStrip';
+import { Testimonials } from '../components/sections/Testimonials';
+import { FeaturedVideos } from '../components/sections/FeaturedVideos';
 
 export default function Home() {
   return (
@@ -20,7 +21,8 @@ export default function Home() {
       <main>
         <Hero />
         <About />
-        <CorporateWellness />
+        <Testimonials />
+        <FeaturedVideos />
         <Audience />
         <Community />
         <CTAStrip />

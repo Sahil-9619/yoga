@@ -24,9 +24,12 @@ const contactRoutes = require("./modules/contact/contact.routes");
 const categoryRoutes = require("./modules/category/category.routes");
 const workshopRoutes = require("./modules/workshop/workshop.routes");
 const bookingRoutes  = require("./modules/booking/booking.routes");
+const reelRoutes = require("./modules/reel/reel.routes");
 const socialRoutes   = require("./modules/social/social.routes");
 const videoRoutes    = require("./modules/video/video.routes");
 const testimonialRoutes = require("./modules/testimonial/testimonial.routes");
+const userRoutes     = require("./modules/user/user.routes");
+const purchaseRoutes = require("./modules/purchase/purchase.routes");
 
 // Routes
 app.use("/api/admin",    adminRoutes);
@@ -34,9 +37,12 @@ app.use("/api/contact",  contactRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/workshop", workshopRoutes);
 app.use("/api/booking",  bookingRoutes);
+app.use("/api/reel", reelRoutes);
 app.use("/api/social",   socialRoutes);
 app.use("/api/video",    videoRoutes);
 app.use("/api/testimonial", testimonialRoutes);
+app.use("/api/user",     userRoutes);
+app.use("/api/purchase", purchaseRoutes);
 
 
 app.get("/", (req, res) => {

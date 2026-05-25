@@ -6,8 +6,8 @@ const upload = require('../../middleware/upload.middleware');
 
 router.get('/all',         controller.getAll);                                       // Public
 router.get('/:id',         controller.getOne);                                       // Public
-router.post('/create',     authMiddleware, upload.single('thumbnail'), controller.create);  // Admin
-router.put('/:id',         authMiddleware, upload.single('thumbnail'), controller.update);  // Admin
+router.post('/create',     authMiddleware, upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'videoFile', maxCount: 1 }]), controller.create);  // Admin
+router.put('/:id',         authMiddleware, upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'videoFile', maxCount: 1 }]), controller.update);  // Admin
 router.delete('/:id',      authMiddleware, controller.remove);                       // Admin
 
 module.exports = router;

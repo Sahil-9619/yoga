@@ -4,15 +4,15 @@ import { motion } from 'framer-motion';
 import { HiPlay, HiClock } from 'react-icons/hi';
 import { InstagramIcon, FacebookIcon } from '../ui/SocialIcons';
 import { useSocialLinks } from '../../hooks/useSocialLinks';
-import { VideoService, Video } from '../../services/video.service';
+import { ReelService, Reel } from '../../services/reel.service';
 
 export const Community = () => {
   const social = useSocialLinks();
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [videos, setVideos] = useState<Reel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    VideoService.getAllVideos()
+    ReelService.getAllReels()
       .then(data => setVideos(data))
       .catch(() => setVideos([]))
       .finally(() => setIsLoading(false));
@@ -48,7 +48,7 @@ export const Community = () => {
                 {/* Background Image */}
                 {video.thumbnail ? (
                   <img
-                    src={VideoService.getThumbnailUrl(video.thumbnail)!}
+                    src={ReelService.getThumbnailUrl(video.thumbnail)!}
                     alt={video.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />

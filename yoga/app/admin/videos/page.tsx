@@ -23,12 +23,14 @@ export default function AdminVideos() {
   const [formError, setFormError] = useState('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     duration: '',
     videoLink: '',
+    price: '',
   });
 
   const fetchVideos = async () => {
@@ -51,18 +53,20 @@ export default function AdminVideos() {
 
   const openCreate = () => {
     setEditingId(null);
-    setFormData({ title: '', description: '', duration: '', videoLink: '' });
+    setFormData({ title: '', description: '', duration: '', videoLink: '', price: '' });
     setPreviewUrl(null);
     setThumbnailFile(null);
+    setVideoFile(null);
     setFormError('');
     setIsModalOpen(true);
   };
 
   const openEdit = (v: Video) => {
     setEditingId(v.id);
-    setFormData({ title: v.title, description: v.description || '', duration: v.duration || '', videoLink: v.videoLink });
+    setFormData({ title: v.title, description: v.description || '', duration: v.duration || '', videoLink: v.videoLink, price: v.price?.toString() || '' });
     setPreviewUrl(v.thumbnail ? VideoService.getThumbnailUrl(v.thumbnail) : null);
     setThumbnailFile(null);
+    setVideoFile(null);
     setFormError('');
     setIsModalOpen(true);
   };
@@ -72,14 +76,16 @@ export default function AdminVideos() {
     setFormError('');
 
     if (!formData.title.trim()) return setFormError('Title is required.');
-    if (!formData.videoLink.trim()) return setFormError('Video link is required.');
+    if (!editingId && !videoFile && !formData.videoLink.trim()) return setFormError('Video file or link is required.');
 
     const fd = new FormData();
     fd.append('title', formData.title);
     fd.append('description', formData.description);
     fd.append('duration', formData.duration);
-    fd.append('videoLink', formData.videoLink);
+    if (formData.videoLink) fd.append('videoLink', formData.videoLink);
+    fd.append('price', formData.price);
     if (thumbnailFile) fd.append('thumbnail', thumbnailFile);
+    if (videoFile) fd.append('videoFile', videoFile);
 
     setIsSaving(true);
     try {
@@ -219,11 +225,25 @@ export default function AdminVideos() {
             />
           </div>
 
-          <Input label="Duration" value={formData.duration}
-            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-            placeholder="e.g. 12:45" icon={<HiClock size={16} />} />
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Duration" value={formData.duration}
+              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              placeholder="e.g. 12:45" icon={<HiClock size={16} />} />
 
-          <Input label="Video Link *" required type="url" value={formData.videoLink}
+            <Input label="Price (₹)" type="number" value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              placeholder="e.g. 500 (0 for free)" />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-bold text-[#5C7562] uppercase tracking-[0.2em] ml-1 mb-1.5">Video File Upload {editingId ? '(Optional to replace)' : '*'}</label>
+            <input type="file" accept="video/*" onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+              className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 mb-2"
+            />
+            <div className="text-xs text-slate-500 ml-2 mt-1">- OR enter an external URL below -</div>
+          </div>
+          
+          <Input label="External Video Link (YouTube/Vimeo)" type="url" value={formData.videoLink}
             onChange={(e) => setFormData({ ...formData, videoLink: e.target.value })}
             placeholder="https://youtube.com/..." icon={<HiCloudUpload size={16} />} />
 

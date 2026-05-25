@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Menu, X, ChevronDown, Activity, Wind, Moon, Sun, Zap } from 'lucide-react';
+import { Sparkles, Menu, X, ChevronDown, Activity, Wind, Moon, Sun, Zap, LogOut } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
 import Link from 'next/link';
@@ -12,8 +12,13 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isYogaHovered, setIsYogaHovered] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const pathname = usePathname();
   const isAboutPage = pathname === '/about' || pathname.startsWith('/yoga');
+
+  useEffect(() => {
+    import('../../services/customer.service').then(m => setUser(m.CustomerService.getCurrentUser()));
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -129,6 +134,26 @@ export const Navbar = () => {
             >
               Contact
             </Link>
+
+            {user ? (
+              <>
+                <Link href="/my-videos" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
+                  My Videos
+                </Link>
+                <button onClick={() => {
+                  import('../../services/customer.service').then(m => {
+                    m.CustomerService.logout();
+                    setUser(null);
+                  });
+                }} className={cn("p-1.5 rounded-full transition-colors", isScrolled ? "text-red-500 hover:text-red-700 hover:bg-red-50" : (isAboutPage ? "text-red-400 hover:text-red-300 hover:bg-red-500/20" : "text-red-500 hover:text-red-700 hover:bg-red-50"))} title="Logout">
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <Link href="/login" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -177,6 +202,20 @@ export const Navbar = () => {
               <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">About</Link>
               <Link href="/workshop" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">Workshop</Link>
               <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">Contact</Link>
+              {user ? (
+                <>
+                  <Link href="/my-videos" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">My Videos</Link>
+                  <button onClick={() => {
+                    import('../../services/customer.service').then(m => {
+                      m.CustomerService.logout();
+                      setUser(null);
+                      setIsMobileMenuOpen(false);
+                    });
+                  }} className="font-serif text-3xl text-[#1A3320] text-left">Logout</button>
+                </>
+              ) : (
+                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">Login</Link>
+              )}
             </div>
           </motion.div>
         )}

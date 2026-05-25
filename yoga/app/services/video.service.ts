@@ -8,6 +8,7 @@ export interface Video {
   duration?: string;
   thumbnail?: string;
   videoLink: string;
+  price?: number;
   createdAt: string;
 }
 

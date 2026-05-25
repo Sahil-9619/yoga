@@ -1,24 +1,20 @@
-'use strict';
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Video extends Model {
+  class Reel extends Model {
     static associate(models) {
-      Video.hasMany(models.Purchase, { foreignKey: 'videoId', as: 'purchases' });
+      // define association here
     }
   }
-
-  Video.init({
+  Reel.init({
     title:       { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.TEXT,   allowNull: true },
     duration:    { type: DataTypes.STRING, allowNull: true },
     thumbnail:   { type: DataTypes.STRING, allowNull: true },  // uploaded image path
-    videoLink:   { type: DataTypes.STRING, allowNull: false },  // YouTube/Vimeo URL
-    price:       { type: DataTypes.DECIMAL, allowNull: true, defaultValue: 0 }, // price field added
+    videoLink:   { type: DataTypes.STRING, allowNull: false },  // YouTube/Vimeo/FB URL
   }, {
     sequelize,
-    modelName: 'Video',
+    modelName: 'Reel',
   });
-
-  return Video;
+  return Reel;
 };

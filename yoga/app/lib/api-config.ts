@@ -1,4 +1,4 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+export const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/api\/?$/, '');
 export const API_BASE_URL = `${BASE_URL}/api`;
 
 export const API_ENDPOINTS = {
@@ -42,4 +42,9 @@ export const API_ENDPOINTS = {
   CREATE_TESTIMONIAL: `${API_BASE_URL}/testimonial/create`,
   UPDATE_TESTIMONIAL: (id: string | number) => `${API_BASE_URL}/testimonial/${id}`,
   DELETE_TESTIMONIAL: (id: string | number) => `${API_BASE_URL}/testimonial/${id}`,
+  // Reels
+  GET_ALL_REELS: `${API_BASE_URL}/reel/all`,
+  CREATE_REEL: `${API_BASE_URL}/reel/create`,
+  UPDATE_REEL: (id: string | number) => `${API_BASE_URL}/reel/${id}`,
+  DELETE_REEL: (id: string | number) => `${API_BASE_URL}/reel/${id}`,
 };
