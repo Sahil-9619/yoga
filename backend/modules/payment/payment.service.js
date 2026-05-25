@@ -12,8 +12,8 @@ const createPaypalOrderService = async (amount) => {
             purchase_units: [
                 {
                     amount: {
-                        currency_code: "USD",
-                        value: amount,
+                        currency_code: process.env.PAYPAL_CURRENCY || "USD",
+                        value: parseFloat(amount).toFixed(2),
                     },
                 },
             ],
@@ -28,4 +28,18 @@ const createPaypalOrderService = async (amount) => {
     }
 };
 
-module.exports = { createPaypalOrderService };
+const capturePaypalOrderService = async (orderId) => {
+    try {
+        const request = new paypal.orders.OrdersCaptureRequest(orderId);
+        request.requestBody({});
+
+        const response = await client.execute(request);
+
+        return response.result;
+    } catch (error) {
+        console.error("PayPal Capture Order Error:", error);
+        throw error;
+    }
+};
+
+module.exports = { createPaypalOrderService, capturePaypalOrderService };

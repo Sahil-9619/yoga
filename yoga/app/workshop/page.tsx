@@ -5,10 +5,6 @@ import {
     Calendar,
     MapPin,
     Clock,
-    Users,
-    ArrowRight,
-    Sparkles,
-    Star,
     RefreshCw,
     MessageCircle,
     Send,
@@ -216,9 +212,66 @@ function WorkshopContent() {
                                             transition={{ delay: i * 0.05 }}
                                             className="py-5 border-b border-emerald-50"
                                         >
+                                            {/* ── Mobile card ── */}
+                                            <div className="flex md:hidden flex-col gap-4">
+                                                {/* Row 1: image + title/meta */}
+                                                <div className="flex items-start gap-3">
+                                                    <div className="w-16 h-16 rounded-xl overflow-hidden flex-none bg-emerald-50 shadow-sm">
+                                                        <img
+                                                            src={item.photo ? (item.photo.startsWith('http') ? item.photo : `${BASE_URL}${item.photo}`) : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'}
+                                                            className="w-full h-full object-cover"
+                                                            alt={item.title}
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-center gap-1.5 text-emerald-600 mb-1 flex-wrap">
+                                                            <span className="text-[9px] font-bold uppercase tracking-widest">{item.Category?.name}</span>
+                                                            <span className="w-1 h-1 rounded-full bg-emerald-300" />
+                                                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${item.priceType === 'free' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                                                {item.priceType === 'free' ? 'Free' : `₹${item.amount}`}
+                                                            </span>
+                                                        </div>
+                                                        <h3 className="text-base font-serif text-[#1A3320] leading-snug line-clamp-2">{item.title}</h3>
+                                                    </div>
+                                                </div>
+
+                                                {/* Row 2: date / time / location */}
+                                                <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-[#5C7562]">
+                                                    <span className="flex items-center gap-1.5">
+                                                        <Calendar className="w-3 h-3 text-emerald-500" />
+                                                        {new Date(item.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
+                                                    </span>
+                                                    <span className="flex items-center gap-1.5">
+                                                        <Clock className="w-3 h-3 text-emerald-500" />
+                                                        {item.time} IST
+                                                    </span>
+                                                    <span className="flex items-center gap-1.5">
+                                                        {item.mode === 'online' ? <Globe className="w-3 h-3 text-emerald-500" /> : <MapPin className="w-3 h-3 text-emerald-500" />}
+                                                        {item.mode === 'online' ? item.platform : item.location}
+                                                    </span>
+                                                </div>
+
+                                                {/* Row 3: buttons */}
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    <button
+                                                        className="py-4 rounded-xl bg-[#1A3320] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-emerald-900 transition-all shadow-md shadow-emerald-900/20"
+                                                        onClick={() => openBooking(item)}
+                                                    >
+                                                        Book Now
+                                                    </button>
+                                                    <button
+                                                        className="py-4 rounded-xl bg-emerald-600 text-white text-[10px] uppercase tracking-widest font-bold hover:bg-emerald-700 transition-all shadow-md shadow-emerald-600/20"
+                                                        onClick={() => openDetails(item)}
+                                                    >
+                                                        View Details
+                                                    </button>
+                                                </div>
+                                            </div>
+
                                             {/* ── Desktop row ── */}
-                                            <div className="flex items-center gap-6 px-2 group hover:bg-emerald-50/40 transition-all rounded-2xl cursor-pointer py-3" onClick={() => openDetails(item)}>
-                                                <div className="w-24 h-24 rounded-2xl overflow-hidden flex-none shadow-sm bg-emerald-50 hidden sm:block">
+                                            <div className="hidden md:flex items-center gap-6 px-2 group hover:bg-emerald-50/40 transition-all rounded-2xl cursor-pointer py-3" onClick={() => openDetails(item)}>
+                                                {/* Thumbnail */}
+                                                <div className="w-24 h-24 rounded-2xl overflow-hidden flex-none shadow-sm bg-emerald-50">
                                                     <img
                                                         src={item.photo ? (item.photo.startsWith('http') ? item.photo : `${BASE_URL}${item.photo}`) : 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80'}
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -226,6 +279,7 @@ function WorkshopContent() {
                                                     />
                                                 </div>
 
+                                                {/* Main info */}
                                                 <div className="flex-1 min-w-0 pr-8">
                                                     <div className="flex items-center gap-2 text-emerald-600 mb-1.5">
                                                         <Calendar className="w-3.5 h-3.5" />
@@ -239,7 +293,8 @@ function WorkshopContent() {
                                                     <p className="text-[#5C7562] text-xs font-light line-clamp-1 max-w-xl">{item.description}</p>
                                                 </div>
 
-                                                <div className="flex flex-col gap-2 min-w-[150px] hidden md:flex">
+                                                {/* Time & location */}
+                                                <div className="flex flex-col gap-2 min-w-[150px]">
                                                     <div className="flex items-center gap-2 text-xs text-[#1A3320]">
                                                         <Clock className="w-4 h-4 text-emerald-600" />
                                                         <span className="font-medium">{item.time} IST</span>
@@ -250,6 +305,7 @@ function WorkshopContent() {
                                                     </div>
                                                 </div>
 
+                                                {/* Price + actions */}
                                                 <div className="flex flex-col items-end gap-3 min-w-[140px]">
                                                     <div className="text-2xl font-serif text-[#1A3320]">
                                                         {item.priceType === 'free' ? 'Free' : `₹${item.amount}`}
@@ -262,6 +318,12 @@ function WorkshopContent() {
                                                     >
                                                         Book Now <ArrowUpRight className="ml-1.5 w-3 h-3" />
                                                     </Button>
+                                                    <button
+                                                        className="w-full flex items-center justify-center gap-1.5 px-6 py-3 rounded-xl bg-emerald-600 text-white text-[9px] uppercase tracking-widest font-bold hover:bg-emerald-700 transition-all shadow-md shadow-emerald-600/30"
+                                                        onClick={(e) => { e.stopPropagation(); openDetails(item); }}
+                                                    >
+                                                        View Details
+                                                    </button>
                                                 </div>
                                             </div>
                                         </motion.div>
@@ -337,7 +399,7 @@ function WorkshopContent() {
                                 <span className="text-emerald-400 font-bold text-[10px] tracking-[0.4em] uppercase mb-6 block">Tailored Experiences</span>
                                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-6 leading-tight">Design Your <br /><span className="text-emerald-300 italic font-light">Custom Journey.</span></h2>
                                 <p className="text-emerald-100/70 font-light leading-relaxed mb-10 text-lg">
-                                    Whether it's for a corporate retreat, a private group, or a deep-dive individual journey, we curate sessions that perfectly align with your specific vibration and goals.
+                                    Whether it&apos;s for a corporate retreat, a private group, or a deep-dive individual journey, we curate sessions that perfectly align with your specific vibration and goals.
                                 </p>
                                 
                                 <div className="flex items-center gap-5 p-5 rounded-xl bg-white/5 border border-white/10 w-fit backdrop-blur-md">

@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     X, ShieldCheck, CreditCard, CheckCircle2, ArrowRight,
-    Calendar, Clock, MapPin, Smartphone, Lock, User, Mail
+    Calendar, Clock, MapPin, Smartphone, Lock, User, Mail, Loader2
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { BookingService } from '../services/booking.service';
+import { PayPalButtons } from '@paypal/react-paypal-js';
+import { PaymentService } from '../services/payment.service';
 
 interface BookingModalProps {
     isOpen: boolean;
@@ -213,6 +215,7 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                             <p className="text-[#5C7562] text-xs font-light">Secure your spot for the workshop.</p>
                                         </div>
                                         {error && <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
+                                        
                                         <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-4 relative overflow-hidden">
                                             <div className="absolute top-0 right-0 p-6 opacity-10"><CreditCard size={80} /></div>
                                             <div className="flex justify-between items-start relative z-10">
@@ -227,19 +230,59 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                                 <div className="text-xs font-medium truncate max-w-[200px]">{workshop.title}</div>
                                             </div>
                                         </div>
-                                        <div className="space-y-3">
-                                            <label className="flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50 cursor-pointer hover:border-emerald-200 transition-colors">
-                                                <input type="radio" name="pay" defaultChecked className="w-3.5 h-3.5 accent-emerald-600" />
-                                                <div className="text-xs font-bold text-[#1A3320]">UPI / Google Pay / PhonePe</div>
-                                            </label>
-                                            <label className="flex items-center gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50 cursor-pointer hover:border-emerald-200 transition-colors">
-                                                <input type="radio" name="pay" className="w-3.5 h-3.5 accent-emerald-600" />
-                                                <div className="text-xs font-bold text-[#1A3320]">Credit / Debit Card</div>
-                                            </label>
-                                        </div>
-                                        <Button variant="premium" className="w-full py-5 rounded-xl text-xs font-bold uppercase tracking-[0.2em] gap-2 shadow-xl shadow-emerald-900/20" onClick={handlePay} disabled={isLoading}>
-                                            {isLoading ? 'Processing...' : `Pay ${workshop.priceType === 'free' ? 'Free' : `₹${workshop.amount}`} Now`} <CreditCard className="w-3.5 h-3.5" />
-                                        </Button>
+
+                                        {workshop.priceType === 'free' ? (
+                                            <Button variant="premium" className="w-full py-5 rounded-xl text-xs font-bold uppercase tracking-[0.2em] gap-2 shadow-xl shadow-emerald-900/20" onClick={handlePay} disabled={isLoading}>
+                                                {isLoading ? 'Processing...' : 'Complete Free Registration'} <CheckCircle2 className="w-3.5 h-3.5" />
+                                            </Button>
+                                        ) : (
+                                            <div className="space-y-4">
+                                                {isLoading ? (
+                                                    <div className="flex flex-col items-center justify-center py-6 gap-3">
+                                                        <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+                                                        <p className="text-xs text-[#5C7562] font-medium">Securing transaction...</p>
+                                                    </div>
+                                                ) : (
+                                                    <PayPalButtons
+                                                        style={{ layout: "vertical", shape: "rect", color: "gold", label: "pay" }}
+                                                        createOrder={async () => {
+                                                            setError('');
+                                                            try {
+                                                                const orderId = await PaymentService.createPaypalOrder(workshop.amount || 0);
+                                                                return orderId;
+                                                            } catch (e: any) {
+                                                                setError(e.message || 'Failed to initialize PayPal payment.');
+                                                                throw e;
+                                                            }
+                                                        }}
+                                                        onApprove={async (data) => {
+                                                            setIsLoading(true);
+                                                            try {
+                                                                const result = await PaymentService.capturePaypalOrder(data.orderID);
+                                                                if (result.status === "COMPLETED") {
+                                                                    await handlePay();
+                                                                } else {
+                                                                    setError("Payment capture was not completed successfully.");
+                                                                    setIsLoading(false);
+                                                                }
+                                                            } catch (e: any) {
+                                                                setError(e.message || "Failed to complete payment transaction.");
+                                                                setIsLoading(false);
+                                                            }
+                                                        }}
+                                                        onError={(err) => {
+                                                            console.error("PayPal Error:", err);
+                                                            setError("Payment failed or was cancelled. Please try again.");
+                                                        }}
+                                                    />
+                                                )}
+                                                
+                                                <div className="flex items-center justify-center gap-2 text-[10px] text-[#5C7562] uppercase tracking-widest font-bold pt-2">
+                                                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                                                    256-bit Encrypted Checkout
+                                                </div>
+                                            </div>
+                                        )}
                                     </motion.div>
                                 )}
 

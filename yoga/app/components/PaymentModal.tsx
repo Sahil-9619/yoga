@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CreditCard, ShieldCheck, Loader2 } from 'lucide-react';
+import { X, ShieldCheck, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
+import { PayPalButtons } from '@paypal/react-paypal-js';
+import { PaymentService } from '../services/payment.service';
 
 interface PaymentModalProps {
     isOpen: boolean;
@@ -12,17 +14,9 @@ interface PaymentModalProps {
 
 export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, video, onPaymentSuccess }) => {
     const [isProcessing, setIsProcessing] = useState(false);
+    const [error, setError] = useState('');
 
     if (!isOpen || !video) return null;
-
-    const handlePay = () => {
-        setIsProcessing(true);
-        // Simulate payment gateway delay
-        setTimeout(() => {
-            setIsProcessing(false);
-            onPaymentSuccess();
-        }, 2000);
-    };
 
     return (
         <AnimatePresence>
@@ -72,24 +66,53 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, vid
                         </div>
 
                         <div className="relative z-10 space-y-4">
-                            <Button
-                                onClick={handlePay}
-                                disabled={isProcessing}
-                                variant="premium"
-                                className="w-full py-4 text-xs tracking-widest uppercase font-bold rounded-xl flex items-center justify-center gap-2"
-                            >
-                                {isProcessing ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin" /> Processing Payment...
-                                    </>
-                                ) : (
-                                    <>
-                                        <CreditCard className="w-4 h-4" /> Pay ₹{video.price} Securely
-                                    </>
-                                )}
-                            </Button>
+                            {error && (
+                                <div className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3 mb-2">
+                                    {error}
+                                </div>
+                            )}
 
-                            <div className="flex items-center justify-center gap-2 text-[10px] text-[#5C7562] uppercase tracking-widest font-bold">
+                            {isProcessing ? (
+                                <div className="flex flex-col items-center justify-center py-6 gap-3">
+                                    <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+                                    <p className="text-xs text-[#5C7562] font-medium">Processing secure transaction...</p>
+                                </div>
+                            ) : (
+                                <PayPalButtons
+                                    style={{ layout: "vertical", shape: "rect", color: "gold", label: "pay" }}
+                                    createOrder={async () => {
+                                        setError('');
+                                        try {
+                                            const orderId = await PaymentService.createPaypalOrder(video.price);
+                                            return orderId;
+                                        } catch (e: any) {
+                                            setError(e.message || 'Failed to initialize PayPal payment.');
+                                            throw e;
+                                        }
+                                    }}
+                                    onApprove={async (data) => {
+                                        setIsProcessing(true);
+                                        try {
+                                            const result = await PaymentService.capturePaypalOrder(data.orderID);
+                                            if (result.status === "COMPLETED") {
+                                                onPaymentSuccess();
+                                            } else {
+                                                setError("Payment capture was not completed successfully.");
+                                            }
+                                        } catch (e: any) {
+                                            setError(e.message || "Failed to complete payment transaction.");
+                                        } finally {
+                                            setIsProcessing(false);
+                                        }
+                                    }}
+                                    onError={(err) => {
+                                        console.error("PayPal Error:", err);
+                                        setError("Payment failed or was cancelled. Please try again.");
+                                    }}
+                                />
+                            )}
+
+                            <div className="flex items-center justify-center gap-2 text-[10px] text-[#5C7562] uppercase tracking-widest font-bold pt-2">
                                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                                 256-bit Encrypted Checkout
                             </div>

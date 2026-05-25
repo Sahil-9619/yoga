@@ -1,4 +1,4 @@
-const { createPaypalOrderService } = require("./payment.service");
+const { createPaypalOrderService, capturePaypalOrderService } = require("./payment.service");
 
 const createOrder = async (req, res) => {
     try {
@@ -27,4 +27,40 @@ const createOrder = async (req, res) => {
     }
 };
 
-module.exports = { createOrder };
+const captureOrder = async (req, res) => {
+    try {
+        const { orderId } = req.body;
+
+        if (!orderId) {
+            return res.status(400).json({
+                success: false,
+                message: "orderId is required",
+            });
+        }
+
+        const captureResult = await capturePaypalOrderService(orderId);
+
+        if (captureResult.status === "COMPLETED") {
+            return res.status(200).json({
+                success: true,
+                message: "Payment captured successfully",
+                data: captureResult,
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: `Payment status is ${captureResult.status}`,
+                data: captureResult,
+            });
+        }
+    } catch (error) {
+        console.error("Capture Order Controller Error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to capture PayPal order: " + error.message,
+        });
+    }
+};
+
+module.exports = { createOrder, captureOrder };

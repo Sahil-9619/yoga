@@ -50,7 +50,7 @@ const sendOtp = async (req, res) => {
         });
 
         // In a real scenario, we check if SMTP is configured
-        if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+        if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD || process.env.SMTP_PASSWORD === 'your_app_password_here') {
             console.warn("SMTP credentials not configured. OTP generated but not sent. OTP:", otp);
             // If they haven't configured it, we can still proceed for development purposes
             return res.status(200).json({ success: true, message: 'SMTP not configured, check console for OTP' });

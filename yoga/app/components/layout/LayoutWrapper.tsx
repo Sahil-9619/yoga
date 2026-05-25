@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Navbar } from "../sections/Navbar";
 import { Footer } from "../sections/Footer";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 export default function LayoutWrapper({
   children,
@@ -14,13 +15,19 @@ export default function LayoutWrapper({
   // Hide Navbar and Footer for any path starting with /admin
   const isAdminRoute = pathname?.startsWith("/admin");
 
+  const initialOptions = {
+    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
+    currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || "USD",
+    intent: "capture",
+  };
+
   return (
-    <>
+    <PayPalScriptProvider options={initialOptions}>
       {!isAdminRoute && <Navbar />}
       <main className="flex-grow">
         {children}
       </main>
       {!isAdminRoute && <Footer />}
-    </>
+    </PayPalScriptProvider>
   );
 }
