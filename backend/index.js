@@ -6,6 +6,8 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const compression = require("compression");
+const rateLimit = require("express-rate-limit");
 
 const { connectDB } = require("./config/db");
 
@@ -17,6 +19,17 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(morgan("dev"));
+app.use(compression()); // Scale: GZIP compress responses to reduce payload sizes
+
+// Security: Rate limiting to prevent brute-force and DDoS
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 1000, // Limit each IP to 1000 requests per window
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, message: "Too many requests from this IP, please try again later." }
+});
+app.use("/api/", apiLimiter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const adminRoutes   = require("./modules/admin/admin.routes");
