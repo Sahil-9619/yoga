@@ -41,6 +41,7 @@ export default function AdminWorkshops() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [formData, setFormData] = useState<WorkshopData>({
     title: '',
@@ -195,6 +196,12 @@ export default function AdminWorkshops() {
     }
   };
 
+  const filteredWorkshops = workshops.filter(workshop => 
+    workshop.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (workshop.description && workshop.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (workshop.Category?.name && workshop.Category.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   return (
     <main className="flex-1 pt-2 px-4 lg:pt-4 lg:px-10 max-w-7xl w-full mx-auto">
       <header className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -218,6 +225,8 @@ export default function AdminWorkshops() {
           <input
             type="text"
             placeholder="Search workshops..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 bg-white border border-emerald-100 rounded-xl text-sm outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all text-[#1A3320]"
           />
         </div>
@@ -237,8 +246,8 @@ export default function AdminWorkshops() {
             <div className="w-10 h-10 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin" />
             <p className="text-sm text-emerald-600 font-medium">Loading workshops...</p>
           </div>
-        ) : workshops.length > 0 ? (
-          workshops.map((workshop, index) => (
+        ) : filteredWorkshops.length > 0 ? (
+          filteredWorkshops.map((workshop, index) => (
             <motion.div
               key={workshop.id}
               initial={{ opacity: 0, y: 20 }}

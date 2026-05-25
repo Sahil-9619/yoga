@@ -20,6 +20,10 @@ export default function LoginPage() {
         try {
             const res = await CustomerService.login({ email, password });
             if (res.success) {
+                // Notify other components of login state change
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new Event('loginChange'));
+                }
                 router.push('/workshop?tab=videos');
             } else {
                 setError(res.message);

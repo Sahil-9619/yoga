@@ -44,7 +44,13 @@ export const CustomerService = {
             if (userStr) return JSON.parse(userStr);
         }
         return null;
-    },
+  },
+
+  // Checks if a user is currently logged in (customer)
+  isAuthenticated: () => {
+    return !!CustomerService.getCurrentUser();
+  },
+
 
     getMyVideos: async () => {
         const user = CustomerService.getCurrentUser();

@@ -23,7 +23,8 @@ import {
   HiCollection,
   HiStar,
   HiChatAlt2,
-  HiPlay
+  HiPlay,
+  HiCurrencyRupee
 } from 'react-icons/hi';
 import { FaFacebookF } from 'react-icons/fa';
 import { cn } from '../../lib/utils';
@@ -38,6 +39,8 @@ interface SidebarProps {
 
 export const menuItems = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: HiViewGrid },
+  { name: 'Users', href: '/admin/users', icon: HiUsers },
+  { name: 'Transactions', href: '/admin/transactions', icon: HiCurrencyRupee },
   { name: 'Workshops', href: '/admin/workshops', icon: HiAcademicCap },
   { name: 'Bookings', href: '/admin/bookings', icon: HiCalendar },
   { name: 'Categories', href: '/admin/categories', icon: HiCollection },

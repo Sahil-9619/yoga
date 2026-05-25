@@ -19,6 +19,8 @@ import {
 import { Button } from '../components/ui/Button';
 import { BookingModal } from '../components/BookingModal';
 import { WorkshopDetailsModal } from '../components/WorkshopDetailsModal';
+import { PaymentModal } from '../components/PaymentModal';
+import { SuccessModal } from '../components/SuccessModal';
 import { WorkshopService } from '../services/workshop.service';
 import { CategoryService } from '../services/category.service';
 import { VideoService } from '../services/video.service';
@@ -42,6 +44,9 @@ function WorkshopContent() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null);
+    const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+    const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+    const [selectedVideo, setSelectedVideo] = useState<any>(null);
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -92,31 +97,38 @@ function WorkshopContent() {
         setIsDetailsOpen(true);
     };
 
-    const handleBuyVideo = async (videoId: number, price: number) => {
+    const handleBuyVideo = async (video: any) => {
         const user = CustomerService.getCurrentUser();
         if (!user) {
             router.push('/login');
             return;
         }
-        if (price === 0) {
-            // auto buy logic or just alert
+        
+        setSelectedVideo(video);
+        
+        if (video.price === 0) {
             try {
-                await CustomerService.buyVideo(videoId);
-                alert("Video added to your library!");
+                await CustomerService.buyVideo(video.id);
                 fetchData();
+                setIsSuccessOpen(true);
             } catch (e) {
                 alert("Failed to get video");
             }
             return;
         }
         
-        // Dummy checkout
+        setIsPaymentOpen(true);
+    };
+
+    const processPaymentSuccess = async () => {
         try {
-            await CustomerService.buyVideo(videoId);
-            alert("Payment successful! Video added to your library.");
+            await CustomerService.buyVideo(selectedVideo.id);
             fetchData();
+            setIsPaymentOpen(false);
+            setIsSuccessOpen(true);
         } catch (e) {
             alert("Checkout failed");
+            setIsPaymentOpen(false);
         }
     };
 
@@ -126,7 +138,7 @@ function WorkshopContent() {
 
     const handleWhatsAppRedirect = (e: React.FormEvent) => {
         e.preventDefault();
-        const phone = "911234567890";
+        const phone = "919119743145";
         const text = `Hi Sargam! My name is ${formData.name}. ${formData.message}`;
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank');
@@ -293,7 +305,7 @@ function WorkshopContent() {
                                                 {isPurchased ? (
                                                     <button onClick={() => router.push('/my-videos')} className="px-6 py-2 bg-emerald-600 text-white rounded-xl">Watch Now</button>
                                                 ) : (
-                                                    <button onClick={() => handleBuyVideo(video.id, video.price || 0)} className="px-6 py-2 bg-[#1A3320] hover:bg-emerald-900 text-white rounded-xl transition-colors">
+                                                    <button onClick={() => handleBuyVideo(video)} className="px-6 py-2 bg-[#1A3320] hover:bg-emerald-900 text-white rounded-xl transition-colors">
                                                         {video.price === 0 ? 'Get Free' : 'Buy Video'}
                                                     </button>
                                                 )}
@@ -391,6 +403,21 @@ function WorkshopContent() {
                     setIsDetailsOpen(false);
                     setTimeout(() => setIsModalOpen(true), 150);
                 }}
+            />
+            
+            <PaymentModal
+                isOpen={isPaymentOpen}
+                onClose={() => setIsPaymentOpen(false)}
+                video={selectedVideo}
+                onPaymentSuccess={processPaymentSuccess}
+            />
+
+            <SuccessModal
+                isOpen={isSuccessOpen}
+                onClose={() => setIsSuccessOpen(false)}
+                message="Video successfully added to your library! You can watch it anytime."
+                actionText="Watch Now"
+                onAction={() => router.push('/my-videos')}
             />
         </main>
     );

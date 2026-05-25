@@ -42,4 +42,20 @@ const myVideos = async (req, res) => {
     }
 };
 
-module.exports = { register, login, myVideos };
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            include: [{ 
+                model: Purchase, 
+                as: 'purchases', 
+                include: [{ model: Video, as: 'video' }]
+            }],
+            order: [['createdAt', 'DESC']]
+        });
+        res.status(200).json({ success: true, data: users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { register, login, myVideos, getAllUsers };

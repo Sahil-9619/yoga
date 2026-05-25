@@ -10,9 +10,7 @@ import { AdminLoader } from '@/app/components/admin/AdminLoader';
 
 export default function AdminLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -54,9 +52,9 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#FDFCF9] flex overflow-hidden">
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 

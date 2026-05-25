@@ -15,7 +15,7 @@ export const CTAStrip = () => {
       <div className="relative z-10 max-w-4xl mx-auto">
         <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md mb-8">
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-emerald-300">Open for Registration</span>
+            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-emerald-300">Begin Your Journey</span>
         </div>
 
         <h2 className="text-4xl md:text-6xl font-serif text-white mb-8 leading-tight">

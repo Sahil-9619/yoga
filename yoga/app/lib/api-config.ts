@@ -47,4 +47,8 @@ export const API_ENDPOINTS = {
   CREATE_REEL: `${API_BASE_URL}/reel/create`,
   UPDATE_REEL: (id: string | number) => `${API_BASE_URL}/reel/${id}`,
   DELETE_REEL: (id: string | number) => `${API_BASE_URL}/reel/${id}`,
+  // Users
+  GET_ALL_USERS: `${API_BASE_URL}/user/all`,
+  // Purchases
+  GET_ALL_PURCHASES: `${API_BASE_URL}/purchase/all`,
 };

@@ -17,8 +17,10 @@ export const metadata: Metadata = {
   description: "Your pranayama and meditation guide",
 };
 
-import { ScrollProgress } from "./components/ui/ScrollProgress";
 import LayoutWrapper from "./components/layout/LayoutWrapper";
+import { ScrollProgress } from "./components/ui/ScrollProgress";
+import { CustomerService } from "./services/customer.service";
+import { UserLogout } from "./components/UserLogout";
 
 export default function RootLayout({
   children,
@@ -36,6 +38,7 @@ export default function RootLayout({
         <LayoutWrapper>
           {children}
         </LayoutWrapper>
+        <UserLogout />
       </body>
     </html>
   );

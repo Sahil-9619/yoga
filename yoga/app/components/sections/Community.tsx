@@ -69,7 +69,7 @@ export const Community = () => {
 
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center opacity-100 scale-100 transition-all duration-300">
                     <HiPlay size={24} className="text-white ml-1" />
                   </div>
                 </div>
@@ -84,7 +84,7 @@ export const Community = () => {
                       {video.description}
                     </p>
                   )}
-                  <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                  <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-400 uppercase tracking-widest opacity-100 translate-y-0 transition-all duration-300">
                     <HiPlay size={12} /> Watch Reel
                   </div>
                 </div>

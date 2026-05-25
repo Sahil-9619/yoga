@@ -55,11 +55,14 @@ export default function AdminTestimonials() {
 
   useEffect(() => { fetchTestimonials(); }, []);
 
-  const filtered = testimonials.filter(t =>
-    t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.location.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = testimonials.filter(t => {
+    if (!searchQuery) return true;
+    return (
+      (t.name && t.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (t.text && t.text.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (t.location && t.location.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  });
 
   const openCreate = () => {
     setEditingId(null);

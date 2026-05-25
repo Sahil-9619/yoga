@@ -140,14 +140,7 @@ export const Navbar = () => {
                 <Link href="/my-videos" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
                   My Videos
                 </Link>
-                <button onClick={() => {
-                  import('../../services/customer.service').then(m => {
-                    m.CustomerService.logout();
-                    setUser(null);
-                  });
-                }} className={cn("p-1.5 rounded-full transition-colors", isScrolled ? "text-red-500 hover:text-red-700 hover:bg-red-50" : (isAboutPage ? "text-red-400 hover:text-red-300 hover:bg-red-500/20" : "text-red-500 hover:text-red-700 hover:bg-red-50"))} title="Logout">
-                  <LogOut className="w-4 h-4" />
-                </button>
+
               </>
             ) : (
               <Link href="/login" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>

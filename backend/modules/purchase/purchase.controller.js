@@ -22,4 +22,20 @@ const checkout = async (req, res) => {
     }
 };
 
-module.exports = { checkout };
+const getAllPurchases = async (req, res) => {
+    try {
+        const { User } = require('../../models');
+        const purchases = await Purchase.findAll({
+            include: [
+                { model: User, as: 'user' },
+                { model: Video, as: 'video' }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
+        res.status(200).json({ success: true, data: purchases });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { checkout, getAllPurchases };
