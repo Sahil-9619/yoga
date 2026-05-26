@@ -69,6 +69,10 @@ export const CustomerService = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: user.id, videoId })
         });
-        return await response.json();
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Failed to complete video purchase');
+        }
+        return result.data;
     }
 };

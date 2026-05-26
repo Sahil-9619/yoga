@@ -1,4 +1,24 @@
-export const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/api\/?$/, '');
+const getBaseUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000/api';
+  const cleanUrl = envUrl.replace(/\/api\/?$/, '');
+  
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    // Support local network access (e.g. from 192.168.x.x) by matching the API host to the page host
+    if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      try {
+        const url = new URL(cleanUrl);
+        url.hostname = hostname;
+        return url.origin;
+      } catch (e) {
+        console.error('Failed to parse API URL:', e);
+      }
+    }
+  }
+  return cleanUrl;
+};
+
+export const BASE_URL = getBaseUrl();
 export const API_BASE_URL = `${BASE_URL}/api`;
 
 export const API_ENDPOINTS = {

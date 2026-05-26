@@ -72,12 +72,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, vid
                                 </div>
                             )}
 
-                            {isProcessing ? (
-                                <div className="flex flex-col items-center justify-center py-6 gap-3">
-                                    <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
-                                    <p className="text-xs text-[#5C7562] font-medium">Processing secure transaction...</p>
-                                </div>
-                            ) : (
+                            <div className="relative">
+                                {isProcessing && (
+                                    <div className="absolute inset-0 bg-white/90 backdrop-blur-[2px] flex flex-col items-center justify-center gap-3 z-50 rounded-2xl py-6">
+                                        <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+                                        <p className="text-xs text-[#5C7562] font-medium">Processing secure transaction...</p>
+                                    </div>
+                                )}
+
                                 <PayPalButtons
                                     style={{ layout: "vertical", shape: "rect", color: "gold", label: "pay" }}
                                     createOrder={async () => {
@@ -110,7 +112,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, vid
                                         setError("Payment failed or was cancelled. Please try again.");
                                     }}
                                 />
-                            )}
+                            </div>
 
                             <div className="flex items-center justify-center gap-2 text-[10px] text-[#5C7562] uppercase tracking-widest font-bold pt-2">
                                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
