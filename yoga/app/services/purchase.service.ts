@@ -19,12 +19,12 @@ export interface PurchaseData {
 }
 
 export const PurchaseService = {
-  getAllPurchases: async (): Promise<PurchaseData[]> => {
+  getAllPurchases: async (page = 1, limit = 10, search = ''): Promise<{ data: PurchaseData[]; totalItems: number; totalPages: number; currentPage: number }> => {
     try {
       const token = AuthService.getToken();
       if (!token) throw new Error('Not authenticated');
 
-      const response = await fetch(API_ENDPOINTS.GET_ALL_PURCHASES, {
+      const response = await fetch(`${API_ENDPOINTS.GET_ALL_PURCHASES}?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`, {
         cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -33,7 +33,7 @@ export const PurchaseService = {
       
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Failed to fetch purchases');
-      return result.data;
+      return result;
     } catch (error: any) {
       console.error('PurchaseService getAllPurchases Error:', error);
       throw error;

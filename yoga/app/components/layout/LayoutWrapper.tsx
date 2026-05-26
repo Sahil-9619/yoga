@@ -6,7 +6,7 @@ import { Footer } from "../sections/Footer";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const initialOptions = {
-  clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
+  clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "AakNVAMj0sdl-Ip0TWRIfWw9TjkkCkw9QhbE2HmJiTMq4P48Yuyi-tXlL_U3Iz4BGE5CkW93VR5Gg4bi",
   currency: process.env.NEXT_PUBLIC_PAYPAL_CURRENCY || "USD",
   intent: "capture",
   components: "buttons",

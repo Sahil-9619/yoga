@@ -11,6 +11,7 @@ export const CustomerService = {
         if (result.success && result.data) {
             if (typeof window !== 'undefined') {
                 localStorage.setItem('customer_user', JSON.stringify(result.data));
+                window.dispatchEvent(new Event('loginChange'));
             }
         }
         return result;
@@ -26,6 +27,7 @@ export const CustomerService = {
         if (result.success && result.data) {
             if (typeof window !== 'undefined') {
                 localStorage.setItem('customer_user', JSON.stringify(result.data));
+                window.dispatchEvent(new Event('loginChange'));
             }
         }
         return result;
@@ -34,6 +36,7 @@ export const CustomerService = {
     logout: () => {
         if (typeof window !== 'undefined') {
             localStorage.removeItem('customer_user');
+            window.dispatchEvent(new Event('loginChange'));
             window.location.href = '/';
         }
     },
@@ -41,7 +44,13 @@ export const CustomerService = {
     getCurrentUser: () => {
         if (typeof window !== 'undefined') {
             const userStr = localStorage.getItem('customer_user');
-            if (userStr) return JSON.parse(userStr);
+            if (!userStr || userStr === 'undefined') return null;
+            try {
+                return JSON.parse(userStr);
+            } catch (e) {
+                console.error("Error parsing customer_user from localStorage", e);
+                return null;
+            }
         }
         return null;
   },
@@ -74,5 +83,18 @@ export const CustomerService = {
             throw new Error(result.message || 'Failed to complete video purchase');
         }
         return result.data;
+    },
+
+    checkEmail: async (email: string) => {
+        const response = await fetch(`${BASE_URL}/api/user/check-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to check email availability.');
+        }
+        return result;
     }
 };

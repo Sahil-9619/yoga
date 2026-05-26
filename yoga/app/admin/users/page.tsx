@@ -2,21 +2,33 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiUsers, HiSearch, HiRefresh, HiChevronDown, HiChevronUp, HiVideoCamera } from 'react-icons/hi';
+import { HiUsers, HiSearch, HiRefresh, HiChevronDown, HiChevronUp, HiVideoCamera, HiTrash, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { UserService, UserData } from '@/app/services/user.service';
 import { cn } from '@/app/lib/utils';
+import { DeleteConfirmModal } from '@/app/components/DeleteConfirmModal';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<{ id: number; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const fetchUsers = async () => {
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const limit = 10;
+
+  const fetchUsers = async (page = currentPage, search = searchQuery) => {
     setIsLoading(true);
     try {
-      const data = await UserService.getAllUsers();
-      setUsers(data);
+      const result = await UserService.getAllUsers(page, limit, search);
+      setUsers(result.data);
+      setTotalItems(result.totalItems);
+      setTotalPages(result.totalPages);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {
@@ -24,9 +36,19 @@ export default function AdminUsers() {
     }
   };
 
+  // Fetch users when page or search query changes with debounce
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    const delayDebounceFn = setTimeout(() => {
+      fetchUsers(currentPage, searchQuery);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [currentPage, searchQuery]);
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1); // Reset page to 1 on new search
+  };
 
   const toggleRow = (id: number) => {
     setExpandedRows(prev => ({
@@ -35,14 +57,26 @@ export default function AdminUsers() {
     }));
   };
 
-  const filteredUsers = users.filter(u => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      (u.name && u.name.toLowerCase().includes(q)) || 
-      (u.email && u.email.toLowerCase().includes(q))
-    );
-  });
+  const openDeleteModal = (id: number, name: string) => {
+    setUserToDelete({ id, name });
+    setIsDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
+    setIsDeleting(true);
+    try {
+      await UserService.deleteUser(userToDelete.id);
+      setIsDeleteOpen(false);
+      setUserToDelete(null);
+      fetchUsers();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Failed to delete user.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <main className="flex-1 pt-2 px-4 lg:pt-4 lg:px-10 max-w-7xl w-full mx-auto">
@@ -52,7 +86,7 @@ export default function AdminUsers() {
           <p className="text-base text-[#5C7562] mt-1">Manage registered users and their purchased videos.</p>
         </div>
         <button 
-          onClick={fetchUsers}
+          onClick={() => fetchUsers(currentPage, searchQuery)}
           className="px-4 py-2.5 bg-white border border-emerald-100 text-emerald-700 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-emerald-50 transition-all shadow-sm"
         >
           <HiRefresh size={14} /> Refresh Data
@@ -66,13 +100,13 @@ export default function AdminUsers() {
             type="text" 
             placeholder="Search by name or email..." 
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 bg-white border border-emerald-100 rounded-xl text-sm outline-none focus:ring-4 focus:ring-emerald-500/5 transition-all text-[#1A3320] shadow-sm"
           />
         </div>
       </div>
 
-      <div className="bg-white border border-emerald-100 rounded-2xl shadow-sm overflow-hidden mb-12">
+      <div className="bg-white border border-emerald-100 rounded-2xl shadow-sm overflow-hidden mb-6">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-[#1A3320] text-emerald-50 text-[10px] uppercase font-bold tracking-widest">
@@ -92,14 +126,14 @@ export default function AdminUsers() {
                     Loading users...
                   </td>
                 </tr>
-              ) : filteredUsers.length === 0 ? (
+              ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-[#5C7562]">
                     No users found.
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((user) => (
+                users.map((user) => (
                   <React.Fragment key={user.id}>
                     <tr className="hover:bg-emerald-50/50 transition-colors group">
                       <td className="px-6 py-4">
@@ -119,7 +153,7 @@ export default function AdminUsers() {
                       <td className="px-6 py-4 text-[#5C7562]">
                         {new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right flex items-center justify-end gap-2">
                         {(user.purchases?.length || 0) > 0 && (
                           <button 
                             onClick={() => toggleRow(user.id)}
@@ -132,6 +166,13 @@ export default function AdminUsers() {
                             )}
                           </button>
                         )}
+                        <button 
+                          onClick={() => openDeleteModal(user.id, user.name)}
+                          className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-red-600 bg-red-50 hover:bg-red-100 rounded-lg inline-flex items-center gap-1 transition-colors border border-red-100/50"
+                          title="Delete User"
+                        >
+                          <HiTrash size={14} /> Delete
+                        </button>
                       </td>
                     </tr>
                     <AnimatePresence>
@@ -174,6 +215,78 @@ export default function AdminUsers() {
           </table>
         </div>
       </div>
+
+      {/* Pagination Controls */}
+      {!isLoading && totalPages > 1 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 bg-white border border-emerald-100 rounded-2xl shadow-sm mb-12">
+          <div className="text-xs font-medium text-[#5C7562]">
+            Showing <span className="font-bold text-[#1A3320]">{Math.min((currentPage - 1) * limit + 1, totalItems)}</span> to{' '}
+            <span className="font-bold text-[#1A3320]">{Math.min(currentPage * limit, totalItems)}</span> of{' '}
+            <span className="font-bold text-[#1A3320]">{totalItems}</span> entries
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="p-2 border border-emerald-100 rounded-xl text-[#5C7562] bg-white hover:bg-emerald-50 disabled:opacity-50 disabled:hover:bg-white transition-all shadow-xs"
+            >
+              <HiChevronLeft size={16} />
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+              if (
+                totalPages > 6 &&
+                page !== 1 &&
+                page !== totalPages &&
+                Math.abs(page - currentPage) > 1
+              ) {
+                if (page === 2 && currentPage > 3) {
+                  return <span key="dots-1" className="px-2 text-xs text-[#5C7562]">...</span>;
+                }
+                if (page === totalPages - 1 && currentPage < totalPages - 2) {
+                  return <span key="dots-2" className="px-2 text-xs text-[#5C7562]">...</span>;
+                }
+                return null;
+              }
+
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={cn(
+                    "w-9 h-9 rounded-xl text-xs font-bold transition-all shadow-xs",
+                    currentPage === page
+                      ? "bg-[#1A3320] text-emerald-50"
+                      : "bg-white border border-emerald-100 text-[#5C7562] hover:bg-emerald-50"
+                  )}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="p-2 border border-emerald-100 rounded-xl text-[#5C7562] bg-white hover:bg-emerald-50 disabled:opacity-50 disabled:hover:bg-white transition-all shadow-xs"
+            >
+              <HiChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <DeleteConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => {
+          setIsDeleteOpen(false);
+          setUserToDelete(null);
+        }}
+        onConfirm={handleConfirmDelete}
+        title="Delete User Account"
+        message={`Are you sure you want to permanently delete ${userToDelete?.name || 'this user'}? This will immediately purge their profile and revoke all active video library access.`}
+        isLoading={isDeleting}
+      />
     </main>
   );
 }

@@ -8,7 +8,24 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode;
 }
 
-export function Input({ label, icon, className, ...props }: InputProps) {
+export function Input({ label, icon, className, onWheel, onKeyDown, min, ...props }: InputProps) {
+  const handleWheel = (e: React.WheelEvent<HTMLInputElement>) => {
+    if (props.type === "number") {
+      e.currentTarget.blur();
+    }
+    if (onWheel) onWheel(e);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (props.type === "number") {
+      // Block '-', 'e', 'E' keys to prevent negative values and exponential notation in number inputs
+      if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+        e.preventDefault();
+      }
+    }
+    if (onKeyDown) onKeyDown(e);
+  };
+
   return (
     <div className="w-full space-y-1.5">
       {label && (
@@ -23,6 +40,9 @@ export function Input({ label, icon, className, ...props }: InputProps) {
             icon && "pr-10",
             className
           )}
+          onWheel={handleWheel}
+          onKeyDown={handleKeyDown}
+          min={props.type === "number" ? (min !== undefined ? min : 0) : min}
           {...props}
         />
         {icon && (

@@ -81,7 +81,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, vid
                                 )}
 
                                 <PayPalButtons
-                                    style={{ layout: "vertical", shape: "rect", color: "gold", label: "pay" }}
+                                    style={{ layout: "vertical", shape: "rect", color: "gold", label: "paypal" }}
                                     createOrder={async () => {
                                         setError('');
                                         try {

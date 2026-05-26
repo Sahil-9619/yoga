@@ -1,4 +1,5 @@
 const { Purchase, Video } = require('../../models');
+const { Op } = require('sequelize');
 
 const checkout = async (req, res) => {
     try {
@@ -24,15 +25,40 @@ const checkout = async (req, res) => {
 
 const getAllPurchases = async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit;
+        const search = req.query.search || '';
+
         const { User } = require('../../models');
-        const purchases = await Purchase.findAll({
+
+        const where = search ? {
+            [Op.or]: [
+                { '$user.name$': { [Op.like]: `%${search}%` } },
+                { '$user.email$': { [Op.like]: `%${search}%` } },
+                { '$video.title$': { [Op.like]: `%${search}%` } }
+            ]
+        } : {};
+
+        const { count, rows } = await Purchase.findAndCountAll({
+            where,
             include: [
                 { model: User, as: 'user' },
                 { model: Video, as: 'video' }
             ],
-            order: [['createdAt', 'DESC']]
+            order: [['createdAt', 'DESC']],
+            limit,
+            offset,
+            distinct: true
         });
-        res.status(200).json({ success: true, data: purchases });
+
+        res.status(200).json({ 
+            success: true, 
+            data: rows,
+            totalItems: count,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

@@ -17,8 +17,19 @@ export const Navbar = () => {
   const isAboutPage = pathname === '/about' || pathname.startsWith('/yoga');
 
   useEffect(() => {
-    import('../../services/customer.service').then(m => setUser(m.CustomerService.getCurrentUser()));
-  }, [pathname]);
+    const updateHeaderUser = () => {
+      import('../../services/customer.service').then(m => setUser(m.CustomerService.getCurrentUser()));
+    };
+    
+    updateHeaderUser();
+    window.addEventListener("loginChange", updateHeaderUser);
+    window.addEventListener("storage", updateHeaderUser);
+    
+    return () => {
+      window.removeEventListener("loginChange", updateHeaderUser);
+      window.removeEventListener("storage", updateHeaderUser);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);

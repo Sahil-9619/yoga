@@ -71,6 +71,7 @@ export const API_ENDPOINTS = {
   DELETE_REEL: (id: string | number) => `${API_BASE_URL}/reel/${id}`,
   // Users
   GET_ALL_USERS: `${API_BASE_URL}/user/all`,
+  DELETE_USER: (id: string | number) => `${API_BASE_URL}/user/${id}`,
   // Purchases
   GET_ALL_PURCHASES: `${API_BASE_URL}/purchase/all`,
 };

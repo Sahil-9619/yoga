@@ -102,7 +102,7 @@ function WorkshopContent() {
         
         setSelectedVideo(video);
         
-        if (video.price === 0) {
+        if (Number(video.price) === 0) {
             try {
                 await CustomerService.buyVideo(video.id);
                 fetchData();
@@ -368,7 +368,7 @@ function WorkshopContent() {
                                                     <button onClick={() => router.push('/my-videos')} className="px-6 py-2 bg-emerald-600 text-white rounded-xl">Watch Now</button>
                                                 ) : (
                                                     <button onClick={() => handleBuyVideo(video)} className="px-6 py-2 bg-[#1A3320] hover:bg-emerald-900 text-white rounded-xl transition-colors">
-                                                        {video.price === 0 ? 'Get Free' : 'Buy Video'}
+                                                        {Number(video.price) === 0 ? 'Get Free' : 'Buy Video'}
                                                     </button>
                                                 )}
                                             </div>

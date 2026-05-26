@@ -1,5 +1,5 @@
 const service = require('./booking.service');
-const nodemailer = require('nodemailer');
+const { sendOTPEmail, sendBookingConfirmationEmail } = require('../../config/mailer');
 
 const otpStore = new Map(); // Simple in-memory store for OTPs: email -> { otp, expiresAt }
 
@@ -11,6 +11,32 @@ const create = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Name, email, phone and workshopId are required.' });
         }
         const data = await service.createBooking({ name, email, phone, workshopId, workshopTitle, categoryName, amount, priceType });
+        
+        // Asynchronously fetch workshop details and send the booking confirmation email
+        (async () => {
+            try {
+                const { Workshop } = require('../../models');
+                const workshop = await Workshop.findByPk(workshopId);
+                
+                const bookingDetails = {
+                    workshopTitle: workshopTitle || (workshop ? workshop.title : 'Custom Session'),
+                    categoryName: categoryName || 'General',
+                    amount,
+                    priceType,
+                    phone,
+                    mode: workshop ? workshop.mode : 'N/A',
+                    time: workshop ? workshop.time : 'N/A',
+                    date: workshop ? new Date(workshop.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A',
+                    location: workshop ? workshop.location : '',
+                    platform: workshop ? workshop.platform : ''
+                };
+                
+                await sendBookingConfirmationEmail(email, name, bookingDetails);
+            } catch (err) {
+                console.error("Failed to send booking confirmation email:", err.message);
+            }
+        })();
+
         return res.status(201).json({ success: true, data });
     } catch (error) {
         return res.status(400).json({ success: false, message: error.message });
@@ -49,31 +75,15 @@ const sendOtp = async (req, res) => {
             expiresAt: Date.now() + 10 * 60 * 1000 
         });
 
-        // In a real scenario, we check if SMTP is configured
-        if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD || process.env.SMTP_PASSWORD === 'your_app_password_here') {
+        // Send OTP using the beautiful config/mailer HTML template
+        const mailResult = await sendOTPEmail(email, otp);
+
+        if (mailResult.simulated) {
             console.warn("SMTP credentials not configured. OTP generated but not sent. OTP:", otp);
-            // If they haven't configured it, we can still proceed for development purposes
             return res.status(200).json({ success: true, message: 'SMTP not configured, check console for OTP' });
         }
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail', // You can change this to your provider
-            auth: {
-                user: process.env.SMTP_EMAIL,
-                pass: process.env.SMTP_PASSWORD
-            }
-        });
-
-        const mailOptions = {
-            from: process.env.SMTP_EMAIL,
-            to: email,
-            subject: 'Your OTP for Workshop Booking',
-            html: `<p>Your verification code is: <strong>${otp}</strong></p><p>This code will expire in 10 minutes.</p>`
-        };
-
-        await transporter.sendMail(mailOptions);
         
-        return res.status(200).json({ success: true, message: 'OTP sent to email' });
+        return res.status(200).json({ success: true, message: 'OTP sent to email successfully' });
     } catch (error) {
         return res.status(500).json({ success: false, message: 'Failed to send OTP: ' + error.message });
     }
