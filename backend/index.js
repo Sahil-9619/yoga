@@ -44,7 +44,12 @@ const testimonialRoutes = require("./modules/testimonial/testimonial.routes");
 const userRoutes = require("./modules/user/user.routes");
 const purchaseRoutes = require("./modules/purchase/purchase.routes");
 const paymentRoutes = require("./modules/payment/payment.routes");
-
+app.use('/testing', (req, res) => {
+    return res.status(200).json({
+        success: true,
+        message: "Backend Running Successfully"
+    });
+})
 
 // Routes
 app.use("/api/admin", adminRoutes);
