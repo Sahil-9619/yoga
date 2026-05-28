@@ -7,6 +7,7 @@ export class BookingService {
     email: string;
     phone: string;
     workshopId: number | string;
+    userId?: number | string;
     workshopTitle?: string;
     categoryName?: string;
     amount?: number | string;
@@ -51,6 +52,16 @@ export class BookingService {
     });
     const result = await response.json();
     if (!response.ok) throw new Error(result.message || 'Failed to fetch bookings');
+    return result.data;
+  }
+
+  static async getMyBookings() {
+    const token = AuthService.getToken();
+    const response = await fetch(API_ENDPOINTS.GET_MY_BOOKINGS, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || 'Failed to fetch your bookings');
     return result.data;
   }
 

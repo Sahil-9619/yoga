@@ -79,7 +79,8 @@ const sendOTPEmail = async (email, otp) => {
 
 const sendWelcomeEmail = async (email, name) => {
     const subject = "Welcome to Saargamm Bhartiye ✨";
-    const htmlContent = compileTemplate("welcome", { subject, name });
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const htmlContent = compileTemplate("welcome", { subject, name, frontendUrl });
     return await sendMail(email, subject, htmlContent);
 };
 

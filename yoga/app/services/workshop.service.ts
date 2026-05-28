@@ -12,7 +12,13 @@ export interface WorkshopData {
   location?: string;
   platform?: string;
   priceType: 'free' | 'paid';
-  amount?: number;
+  amount?: number | '';
+  groupPrice?: number | '';
+  personalPrice?: number | '';
+  singleSessionPrice?: number | '';
+  scheduleInfo?: string;
+  frequency?: string;
+  duration?: string;
   categoryId: number | string;
 }
 

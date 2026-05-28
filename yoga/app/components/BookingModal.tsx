@@ -9,31 +9,22 @@ import { Button } from './ui/Button';
 import { BookingService } from '../services/booking.service';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { PaymentService } from '../services/payment.service';
+import { CustomerService } from '../services/customer.service';
 
 interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
-    workshop: {
-        id?: number | string;
-        title: string;
-        date: string;
-        time: string;
-        location?: string;
-        platform?: string;
-        mode: string;
-        priceType: string;
-        amount?: number | string;
-    } | null;
+    workshop: any;
 }
 
-type Step = 'details' | 'otp' | 'payment' | 'success';
+type Step = 'details' | 'payment' | 'success';
 
 export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) => {
     const [step, setStep] = useState<Step>('details');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [otp, setOtp] = useState(['', '', '', '']);
+    const [selectedPriceType, setSelectedPriceType] = useState<'group' | 'personal' | 'single'>('group');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -41,54 +32,48 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
         if (!isOpen) {
             setTimeout(() => {
                 setStep('details');
-                setName(''); setEmail(''); setPhone('');
-                setOtp(['', '', '', '']);
                 setError('');
             }, 500);
+        } else {
+            const user = CustomerService.getCurrentUser();
+            if (user) {
+                setName(user.name || '');
+                setEmail(user.email || '');
+            } else {
+                window.location.href = '/login';
+            }
         }
     }, [isOpen]);
 
-    const handleSendOtp = async () => {
+    const handleContinue = async () => {
         if (!name.trim()) return setError('Please enter your name.');
         if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return setError('Please enter a valid email.');
         if (phone.length < 10) return setError('Please enter a valid 10-digit phone number.');
         setError('');
-        setIsLoading(true);
-        try {
-            await BookingService.sendOtp(email);
-            setStep('otp');
-        } catch (e: any) {
-            setError(e.message || 'Failed to send OTP.');
-        } finally {
-            setIsLoading(false);
-        }
+        setStep('payment');
     };
 
-    const handleVerifyOtp = async () => {
-        setIsLoading(true);
-        setError('');
-        try {
-            const otpString = otp.join('');
-            await BookingService.verifyOtp(email, otpString);
-            setStep('payment');
-        } catch (e: any) {
-            setError(e.message || 'Invalid or expired OTP.');
-        } finally {
-            setIsLoading(false);
-        }
+    const getPrice = () => {
+        if (!workshop) return 0;
+        if (workshop.priceType === 'free') return 0;
+        if (selectedPriceType === 'personal') return workshop.personalPrice || workshop.amount || 0;
+        if (selectedPriceType === 'single') return workshop.singleSessionPrice || workshop.amount || 0;
+        return workshop.groupPrice || workshop.amount || 0;
     };
 
     const handlePay = async () => {
         if (!workshop) return;
         setIsLoading(true);
         try {
+            const user = CustomerService.getCurrentUser();
             await BookingService.createBooking({
                 name, email, phone,
+                userId: user?.id,
                 workshopId: workshop.id ?? 0,
                 workshopTitle: workshop.title,
-                categoryName: (workshop as any).Category?.name,
-                amount: workshop.amount,
-                priceType: workshop.priceType,
+                categoryName: workshop.Category?.name,
+                amount: getPrice(),
+                priceType: workshop.priceType === 'free' ? 'free' : selectedPriceType,
             });
             setStep('success');
         } catch (e: any) {
@@ -96,15 +81,6 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const handleOtpChange = (index: number, value: string) => {
-        const num = value.replace(/\D/g, '');
-        if (num.length > 1) return;
-        const newOtp = [...otp];
-        newOtp[index] = num;
-        setOtp(newOtp);
-        if (num && index < 3) document.getElementById(`otp-${index + 1}`)?.focus();
     };
 
     if (!workshop) return null;
@@ -132,26 +108,20 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                         <div className="px-6 pt-8 pb-4 flex justify-between items-center border-b border-slate-50">
                             <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-600">
                                 {step === 'details' && 'Your Details'}
-                                {step === 'otp' && 'Verification'}
                                 {step === 'payment' && 'Checkout'}
                                 {step === 'success' && 'Confirmed'}
                             </span>
-                            <div className="flex gap-1.5">
-                                {(['details', 'otp', 'payment', 'success'] as Step[]).map((s, i) => (
-                                    <div key={s} className={`h-1 rounded-full transition-all duration-500 ${step === s ? 'w-6 bg-emerald-600' : (['details', 'otp', 'payment', 'success'].indexOf(step) > i ? 'w-3 bg-emerald-200' : 'w-3 bg-slate-100')}`} />
-                                ))}
-                            </div>
                         </div>
 
                         <div className="p-6 md:p-8">
                             <AnimatePresence mode="wait">
 
-                                {/* Step 1: Name / Email / Phone */}
+                                {/* Step 1: Details */}
                                 {step === 'details' && (
                                     <motion.div key="details" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                                         <div>
                                             <h3 className="text-2xl font-serif text-[#1A3320] mb-1">Book Your Spot</h3>
-                                            <p className="text-[#5C7562] text-xs font-light">Enter your details to reserve a place.</p>
+                                            <p className="text-[#5C7562] text-xs font-light">Confirm your details to reserve a place.</p>
                                         </div>
 
                                         {error && <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
@@ -165,8 +135,8 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                         {/* Email */}
                                         <div className="relative">
                                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Mail className="w-4 h-4" /></div>
-                                            <input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)}
-                                                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all text-sm text-slate-800 placeholder:text-slate-400" />
+                                            <input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} readOnly
+                                                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-slate-100 border border-slate-100 focus:outline-none transition-all text-sm text-slate-500 cursor-not-allowed" />
                                         </div>
                                         {/* Phone */}
                                         <div className="relative">
@@ -175,34 +145,44 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                                 className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all text-sm text-slate-800 placeholder:text-slate-400" />
                                         </div>
 
+                                        {workshop.priceType === 'paid' && (
+                                            <div className="space-y-2 mt-4">
+                                                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Session Type</label>
+                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                                    {workshop.singleSessionPrice && (
+                                                        <button 
+                                                            onClick={() => setSelectedPriceType('single')}
+                                                            className={`py-3 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 ${selectedPriceType === 'single' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500 hover:border-emerald-300'}`}
+                                                        >
+                                                            <span>1 Session</span>
+                                                            <span className="text-[10px] opacity-70">${workshop.singleSessionPrice}</span>
+                                                        </button>
+                                                    )}
+                                                    <button 
+                                                        onClick={() => setSelectedPriceType('group')}
+                                                        className={`py-3 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 ${selectedPriceType === 'group' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500 hover:border-emerald-300'}`}
+                                                    >
+                                                        <span>Group</span>
+                                                        <span className="text-[10px] opacity-70">${workshop.groupPrice || workshop.amount}</span>
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => setSelectedPriceType('personal')}
+                                                        className={`py-3 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 ${selectedPriceType === 'personal' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500 hover:border-emerald-300'}`}
+                                                    >
+                                                        <span>1:1 Personal</span>
+                                                        <span className="text-[10px] opacity-70">${workshop.personalPrice || workshop.amount}</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+
                                         <div className="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-100 flex gap-3">
                                             <Lock className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                                             <p className="text-[10px] text-emerald-800/70 leading-relaxed">Your data is encrypted and used only for booking confirmation.</p>
                                         </div>
 
-                                        <Button variant="premium" className="w-full py-5 rounded-xl text-xs font-bold uppercase tracking-[0.2em] gap-2" onClick={handleSendOtp} disabled={isLoading}>
-                                            {isLoading ? 'Please wait...' : 'Continue'} <ArrowRight className="w-3.5 h-3.5" />
-                                        </Button>
-                                    </motion.div>
-                                )}
-
-                                {/* Step 2: OTP */}
-                                {step === 'otp' && (
-                                    <motion.div key="otp" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-5">
-                                        <div>
-                                            <h3 className="text-2xl font-serif text-[#1A3320] mb-1.5">Verify Email</h3>
-                                            <p className="text-[#5C7562] text-xs font-light">Code sent to <span className="font-semibold text-emerald-700">{email}</span></p>
-                                        </div>
-                                        {error && <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
-                                        <div className="flex justify-between gap-3 py-2">
-                                            {otp.map((digit, idx) => (
-                                                <input key={idx} id={`otp-${idx}`} type="text" maxLength={1}
-                                                    className="w-12 h-16 text-center text-2xl font-serif rounded-xl bg-slate-50 border border-slate-100 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all text-slate-800"
-                                                    value={digit} onChange={e => handleOtpChange(idx, e.target.value)} />
-                                            ))}
-                                        </div>
-                                        <Button variant="premium" className="w-full py-5 rounded-xl text-xs font-bold uppercase tracking-[0.2em] gap-2" onClick={handleVerifyOtp} disabled={otp.some(d => !d) || isLoading}>
-                                            {isLoading ? 'Verifying...' : 'Verify & Continue'} <ShieldCheck className="w-3.5 h-3.5" />
+                                        <Button variant="premium" className="w-full py-5 rounded-xl text-xs font-bold uppercase tracking-[0.2em] gap-2" onClick={handleContinue} disabled={isLoading}>
+                                            {isLoading ? 'Please wait...' : 'Continue to Checkout'} <ArrowRight className="w-3.5 h-3.5" />
                                         </Button>
                                     </motion.div>
                                 )}
@@ -221,7 +201,8 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                             <div className="flex justify-between items-start relative z-10">
                                                 <div>
                                                     <div className="text-[9px] font-bold uppercase tracking-widest opacity-60 mb-0.5">Amount</div>
-                                                    <div className="text-3xl font-serif">{workshop.priceType === 'free' ? 'Free' : `₹${workshop.amount}`}</div>
+                                                    <div className="text-3xl font-serif">{workshop.priceType === 'free' ? 'Free' : `$${getPrice()}`}</div>
+                                                    {workshop.priceType === 'paid' && <div className="text-[10px] text-emerald-400 mt-1">{selectedPriceType === 'group' ? 'Group Session' : selectedPriceType === 'single' ? 'Single Session' : '1:1 Personal Session'}</div>}
                                                 </div>
                                                 <div className="px-2 py-0.5 rounded-full bg-white/10 text-[7px] font-bold uppercase tracking-widest">Secure</div>
                                             </div>
@@ -250,7 +231,7 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                                         createOrder={async () => {
                                                             setError('');
                                                             try {
-                                                                const orderId = await PaymentService.createPaypalOrder(workshop.amount || 0);
+                                                                const orderId = await PaymentService.createPaypalOrder(getPrice());
                                                                 return orderId;
                                                             } catch (e: any) {
                                                                 setError(e.message || 'Failed to initialize PayPal payment.');
@@ -303,18 +284,20 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                                     <div className="text-xs font-medium text-[#1A3320]">{name}</div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-3">
-                                                <Calendar className="w-4 h-4 text-emerald-600" />
-                                                <div>
-                                                    <div className="text-[8px] font-bold uppercase tracking-widest text-slate-400">Date</div>
-                                                    <div className="text-xs font-medium text-[#1A3320]">{workshop.date}</div>
+                                            {workshop.date && (
+                                                <div className="flex items-center gap-3">
+                                                    <Calendar className="w-4 h-4 text-emerald-600" />
+                                                    <div>
+                                                        <div className="text-[8px] font-bold uppercase tracking-widest text-slate-400">Date</div>
+                                                        <div className="text-xs font-medium text-[#1A3320]">{workshop.date}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )}
                                             <div className="flex items-center gap-3">
                                                 <Clock className="w-4 h-4 text-emerald-600" />
                                                 <div>
-                                                    <div className="text-[8px] font-bold uppercase tracking-widest text-slate-400">Time</div>
-                                                    <div className="text-xs font-medium text-[#1A3320]">{workshop.time} IST</div>
+                                                    <div className="text-[8px] font-bold uppercase tracking-widest text-slate-400">Schedule</div>
+                                                    <div className="text-xs font-medium text-[#1A3320]">{workshop.scheduleInfo}</div>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">

@@ -35,7 +35,7 @@ const connectDB = async () => {
         const bcrypt = require('bcrypt');
         const adminCount = await db.Admin.count();
         if (adminCount === 0) {
-            const hashedPassword = await bcrypt.hash('admin@yoga', 10);
+            const hashedPassword = await bcrypt.hash('admin@yogausa2026', 10);
             await db.Admin.create({
                 name: 'Super Admin',
                 email: 'admin@yoga.in',

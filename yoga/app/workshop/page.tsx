@@ -83,6 +83,11 @@ function WorkshopContent() {
     };
 
     const openBooking = (workshop: any) => {
+        const user = CustomerService.getCurrentUser();
+        if (!user) {
+            router.push('/login?redirect=/workshop?tab=workshops');
+            return;
+        }
         setSelectedWorkshop(workshop);
         setIsModalOpen(true);
         setIsDetailsOpen(false);
@@ -96,7 +101,7 @@ function WorkshopContent() {
     const handleBuyVideo = async (video: any) => {
         const user = CustomerService.getCurrentUser();
         if (!user) {
-            router.push('/login');
+            router.push('/login?redirect=/workshop?tab=videos');
             return;
         }
         
@@ -227,9 +232,13 @@ function WorkshopContent() {
                                                         <div className="flex items-center gap-1.5 text-emerald-600 mb-1 flex-wrap">
                                                             <span className="text-[9px] font-bold uppercase tracking-widest">{item.Category?.name}</span>
                                                             <span className="w-1 h-1 rounded-full bg-emerald-300" />
-                                                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${item.priceType === 'free' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                                                                {item.priceType === 'free' ? 'Free' : `₹${item.amount}`}
-                                                            </span>
+                                                            {item.priceType === 'free' ? (
+                                                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Free</span>
+                                                            ) : (
+                                                                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 truncate max-w-[250px]">
+                                                                    {item.singleSessionPrice ? `1 Session: $${item.singleSessionPrice} | ` : ''}Group: ${item.groupPrice || item.amount} | 1:1: ${item.personalPrice || item.amount}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                         <h3 className="text-base font-serif text-[#1A3320] leading-snug line-clamp-2">{item.title}</h3>
                                                     </div>
@@ -237,13 +246,9 @@ function WorkshopContent() {
 
                                                 {/* Row 2: date / time / location */}
                                                 <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-[#5C7562]">
-                                                    <span className="flex items-center gap-1.5">
-                                                        <Calendar className="w-3 h-3 text-emerald-500" />
-                                                        {new Date(item.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
-                                                    </span>
-                                                    <span className="flex items-center gap-1.5">
-                                                        <Clock className="w-3 h-3 text-emerald-500" />
-                                                        {item.time} IST
+                                                    <span className="flex items-center gap-1.5 w-full">
+                                                        <Clock className="w-3 h-3 text-emerald-500 flex-none" />
+                                                        {item.scheduleInfo}
                                                     </span>
                                                     <span className="flex items-center gap-1.5">
                                                         {item.mode === 'online' ? <Globe className="w-3 h-3 text-emerald-500" /> : <MapPin className="w-3 h-3 text-emerald-500" />}
@@ -282,22 +287,27 @@ function WorkshopContent() {
                                                 {/* Main info */}
                                                 <div className="flex-1 min-w-0 pr-8">
                                                     <div className="flex items-center gap-2 text-emerald-600 mb-1.5">
-                                                        <Calendar className="w-3.5 h-3.5" />
-                                                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700">
-                                                            {new Date(item.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
-                                                        </span>
-                                                        <span className="w-1 h-1 rounded-full bg-emerald-200" />
+                                                        {item.date && (
+                                                            <>
+                                                                <Calendar className="w-3.5 h-3.5" />
+                                                                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700">
+                                                                    {new Date(item.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
+                                                                </span>
+                                                                <span className="w-1 h-1 rounded-full bg-emerald-200" />
+                                                            </>
+                                                        )}
                                                         <span className="text-[10px] font-bold uppercase tracking-widest text-[#5C7562]">{item.Category?.name}</span>
                                                     </div>
                                                     <h3 className="text-xl font-serif text-[#1A3320] group-hover:text-emerald-700 transition-colors mb-1">{item.title}</h3>
+                                                    {item.frequency && <p className="text-emerald-700 text-xs font-bold mb-1">{item.frequency} {item.duration ? `(${item.duration})` : ''}</p>}
                                                     <p className="text-[#5C7562] text-xs font-light line-clamp-1 max-w-xl">{item.description}</p>
                                                 </div>
 
                                                 {/* Time & location */}
                                                 <div className="flex flex-col gap-2 min-w-[150px]">
-                                                    <div className="flex items-center gap-2 text-xs text-[#1A3320]">
-                                                        <Clock className="w-4 h-4 text-emerald-600" />
-                                                        <span className="font-medium">{item.time} IST</span>
+                                                    <div className="flex items-start gap-2 text-xs text-[#1A3320]">
+                                                        <Clock className="w-4 h-4 text-emerald-600 flex-none mt-0.5" />
+                                                        <span className="font-medium max-w-[150px] leading-snug">{item.scheduleInfo}</span>
                                                     </div>
                                                     <div className="flex items-center gap-2 text-[11px] text-[#5C7562]">
                                                         {item.mode === 'online' ? <Globe className="w-4 h-4 opacity-40" /> : <MapPin className="w-4 h-4 opacity-40" />}
@@ -307,8 +317,16 @@ function WorkshopContent() {
 
                                                 {/* Price + actions */}
                                                 <div className="flex flex-col items-end gap-3 min-w-[140px]">
-                                                    <div className="text-2xl font-serif text-[#1A3320]">
-                                                        {item.priceType === 'free' ? 'Free' : `₹${item.amount}`}
+                                                    <div className="text-right">
+                                                        {item.priceType === 'free' ? (
+                                                            <div className="text-2xl font-serif text-[#1A3320]">Free</div>
+                                                        ) : (
+                                                            <>
+                                                              {item.singleSessionPrice ? <div className="text-xs font-serif text-[#1A3320]">1 Session: ${item.singleSessionPrice}</div> : null}
+                                                              <div className="text-sm font-serif text-[#1A3320]">Group: ${item.groupPrice || item.amount}</div>
+                                                              <div className="text-sm font-serif text-[#1A3320]">1:1: ${item.personalPrice || item.amount}</div>
+                                                            </>
+                                                        )}
                                                     </div>
                                                     <Button
                                                         variant="premium"
@@ -463,7 +481,7 @@ function WorkshopContent() {
                 workshop={selectedWorkshop}
                 onBook={() => {
                     setIsDetailsOpen(false);
-                    setTimeout(() => setIsModalOpen(true), 150);
+                    setTimeout(() => openBooking(selectedWorkshop), 150);
                 }}
             />
             

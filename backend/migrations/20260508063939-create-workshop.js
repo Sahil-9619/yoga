@@ -39,6 +39,24 @@ module.exports = {
       amount: {
         type: Sequelize.DECIMAL
       },
+      groupPrice: {
+        type: Sequelize.DECIMAL
+      },
+      personalPrice: {
+        type: Sequelize.DECIMAL
+      },
+      singleSessionPrice: {
+        type: Sequelize.DECIMAL
+      },
+      scheduleInfo: {
+        type: Sequelize.STRING
+      },
+      frequency: {
+        type: Sequelize.STRING
+      },
+      duration: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

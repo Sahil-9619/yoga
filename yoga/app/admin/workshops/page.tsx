@@ -8,7 +8,7 @@ import {
   HiPlus,
   HiCalendar,
   HiLocationMarker,
-  HiCurrencyRupee,
+  HiCurrencyDollar,
   HiTrash,
   HiPencilAlt,
   HiSearch,
@@ -53,7 +53,13 @@ export default function AdminWorkshops() {
     location: '',
     platform: '',
     priceType: 'free',
-    amount: 0,
+    amount: '',
+    groupPrice: '',
+    personalPrice: '',
+    singleSessionPrice: '',
+    scheduleInfo: '',
+    frequency: '',
+    duration: '',
     categoryId: ''
   });
 
@@ -102,7 +108,13 @@ export default function AdminWorkshops() {
       location: '',
       platform: '',
       priceType: 'free',
-      amount: 0,
+      amount: '',
+      groupPrice: '',
+      personalPrice: '',
+      singleSessionPrice: '',
+      scheduleInfo: '',
+      frequency: '',
+      duration: '',
       categoryId: categories.length > 0 ? categories[0].value : ''
     });
     setPreviewUrl(null);
@@ -122,7 +134,13 @@ export default function AdminWorkshops() {
       location: workshop.location || '',
       platform: workshop.platform || '',
       priceType: workshop.priceType,
-      amount: workshop.amount,
+      amount: workshop.amount || '',
+      groupPrice: workshop.groupPrice || '',
+      personalPrice: workshop.personalPrice || '',
+      singleSessionPrice: workshop.singleSessionPrice || '',
+      scheduleInfo: workshop.scheduleInfo || '',
+      frequency: workshop.frequency || '',
+      duration: workshop.duration || '',
       categoryId: workshop.categoryId
     });
     const photoUrl = workshop.photo ? (workshop.photo.startsWith('http') ? workshop.photo : `${BASE_URL}${workshop.photo}`) : null;
@@ -159,13 +177,8 @@ export default function AdminWorkshops() {
 
     // Client-side validation
     if (!formData.title.trim()) return setFormError('Workshop title is required.');
-    if (!formData.description.trim()) return setFormError('Description is required.');
-    if (!formData.date) return setFormError('Please select a date for the workshop.');
-    if (!formData.time.trim()) return setFormError('Please enter the workshop time.');
     if (!formData.categoryId) return setFormError('Please select a category.');
-    if (formData.mode === 'online' && !formData.platform?.trim()) return setFormError('Platform is required for online workshops (e.g. Zoom, Google Meet).');
     if (formData.mode === 'offline' && !formData.location?.trim()) return setFormError('Location is required for offline workshops.');
-    if (formData.priceType === 'paid' && (!formData.amount || Number(formData.amount) <= 0)) return setFormError('Please enter a valid price amount.');
     if (!isEditing && !selectedFile) return setFormError('Please upload a cover image for the workshop.');
 
     setIsSaving(true);
@@ -294,14 +307,16 @@ export default function AdminWorkshops() {
 
               <h3 className="text-xl font-serif text-[#1A3320] mb-3 line-clamp-1">{workshop.title}</h3>
 
-              <div className="space-y-2.5 flex-1">
-                <div className="flex items-center gap-2 text-xs text-[#5C7562]">
-                  <HiCalendar className="text-emerald-600/50" size={14} />
-                  {new Date(workshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'long', day: 'numeric', year: 'numeric' })}
-                </div>
+                <div className="space-y-2.5 flex-1">
+                  {workshop.date && (
+                    <div className="flex items-center gap-2 text-xs text-[#5C7562]">
+                      <HiCalendar className="text-emerald-600/50" size={14} />
+                      {new Date(workshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'long', day: 'numeric', year: 'numeric' })}
+                    </div>
+                  )}
                 <div className="flex items-center gap-2 text-xs text-[#5C7562]">
                   <HiClock className="text-emerald-600/50" size={14} />
-                  {workshop.time} IST
+                  {workshop.scheduleInfo}
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#5C7562]">
                   {workshop.mode === 'online' ? (
@@ -311,9 +326,16 @@ export default function AdminWorkshops() {
                   )}
                   {workshop.mode === 'online' ? workshop.platform : workshop.location}
                 </div>
-                <div className="flex items-center gap-2 text-xs font-bold text-emerald-700">
-                  <HiCurrencyRupee size={14} />
-                  {workshop.priceType === 'free' ? 'Free' : `₹${workshop.amount}`}
+                <div className="flex flex-col gap-1 text-[10px] text-emerald-700 font-medium">
+                  {workshop.priceType === 'free' ? (
+                    <div className="flex items-center gap-2 font-bold"><HiCurrencyDollar size={14} /> Free</div>
+                  ) : (
+                    <>
+                      {workshop.singleSessionPrice && <div className="flex items-center gap-1"><HiCurrencyDollar size={12} /> 1 Session: ${workshop.singleSessionPrice}</div>}
+                      <div className="flex items-center gap-1"><HiCurrencyDollar size={12} /> Group: ${workshop.groupPrice || workshop.amount}</div>
+                      <div className="flex items-center gap-1"><HiCurrencyDollar size={12} /> 1:1: ${workshop.personalPrice || workshop.amount}</div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -355,7 +377,6 @@ export default function AdminWorkshops() {
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-[#5C7562] ml-1">Description</label>
             <textarea
-              required
               rows={3}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -372,12 +393,10 @@ export default function AdminWorkshops() {
               options={categories}
             />
             <Input
-              label="Time"
-              required
-              value={formData.time}
-              onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-              placeholder="e.g. 10:00 AM - 12:00 PM"
-              icon={<HiClock size={16} />}
+              label="Schedule Info"
+              value={formData.scheduleInfo}
+              onChange={(e) => setFormData({ ...formData, scheduleInfo: e.target.value })}
+              placeholder="e.g. Mon & Wed 7:30am EST"
             />
           </div>
 
@@ -385,10 +404,12 @@ export default function AdminWorkshops() {
             <Input
               label="Date"
               type="date"
-              required
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <Select
               label="Mode"
               value={formData.mode}
@@ -404,7 +425,6 @@ export default function AdminWorkshops() {
             {formData.mode === 'online' ? (
               <Input
                 label="Platform"
-                required
                 value={formData.platform}
                 onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
                 placeholder="e.g. Zoom, GMeet"
@@ -432,16 +452,48 @@ export default function AdminWorkshops() {
           </div>
 
           {formData.priceType === 'paid' && (
-            <Input
-              label="Amount (₹)"
-              type="number"
-              required
-              value={formData.amount}
-              onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
-              placeholder="e.g. 1500"
-              icon={<HiCurrencyRupee size={16} />}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="Base Amount ($)"
+                type="number"
+                value={formData.amount}
+                onChange={(e) => setFormData({ ...formData, amount: e.target.value === '' ? '' : Number(e.target.value) })}
+                placeholder="e.g. 1500"
+                icon={<HiCurrencyDollar size={16} />}
+              />
+              <Input
+                label="Group Price ($)"
+                type="number"
+                value={formData.groupPrice}
+                onChange={(e) => setFormData({ ...formData, groupPrice: e.target.value === '' ? '' : Number(e.target.value) })}
+                placeholder="e.g. 133"
+                icon={<HiCurrencyDollar size={16} />}
+              />
+              <Input
+                label="1:1 Personal Price ($)"
+                type="number"
+                value={formData.personalPrice}
+                onChange={(e) => setFormData({ ...formData, personalPrice: e.target.value === '' ? '' : Number(e.target.value) })}
+                placeholder="e.g. 1999"
+                icon={<HiCurrencyDollar size={16} />}
+              />
+            </div>
           )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Frequency"
+              value={formData.frequency}
+              onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
+              placeholder="e.g. 12 Sessions/Month"
+            />
+            <Input
+              label="Duration"
+              value={formData.duration}
+              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              placeholder="e.g. 1 hour"
+            />
+          </div>
 
           <FileUpload
             label="Workshop Cover Image"
@@ -505,17 +557,39 @@ export default function AdminWorkshops() {
 
               <div className="grid grid-cols-2 gap-y-4 gap-x-8 pt-2 border-t border-emerald-50">
                 <div className="space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-[#1A3320]/40 tracking-widest">Date & Time</span>
-                  <div className="text-sm text-[#1A3320] font-medium flex items-center gap-2">
-                    <HiCalendar size={14} className="text-emerald-600" />
-                    {new Date(selectedWorkshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' })} at {selectedWorkshop.time} IST
+                  <span className="text-[10px] uppercase font-bold text-[#1A3320]/40 tracking-widest">Schedule & Duration</span>
+                  <div className="text-sm text-[#1A3320] font-medium flex flex-col gap-1">
+                    {(selectedWorkshop.frequency || selectedWorkshop.date) && (
+                      <div className="flex items-center gap-2">
+                        <HiCalendar size={14} className="text-emerald-600" />
+                        {selectedWorkshop.frequency || (selectedWorkshop.date ? new Date(selectedWorkshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata' }) : '')}
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <HiClock size={14} className="text-emerald-600" />
+                      {selectedWorkshop.scheduleInfo}
+                    </div>
+                    {selectedWorkshop.duration && (
+                      <div className="flex items-center gap-2 text-xs opacity-70">
+                        {selectedWorkshop.duration}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase font-bold text-[#1A3320]/40 tracking-widest">Pricing</span>
-                  <div className="text-sm text-[#1A3320] font-medium flex items-center gap-2">
-                    <HiCurrencyRupee size={14} className="text-emerald-600" />
-                    {selectedWorkshop.priceType === 'free' ? 'Free Access' : `₹${selectedWorkshop.amount}`}
+                  <div className="text-sm text-[#1A3320] font-medium flex flex-col gap-1">
+                    {selectedWorkshop.priceType === 'free' ? (
+                      <div className="flex items-center gap-2">
+                        <HiCurrencyDollar size={14} className="text-emerald-600" /> Free Access
+                      </div>
+                    ) : (
+                      <>
+                        {selectedWorkshop.singleSessionPrice && <div className="flex items-center gap-2 text-xs"><HiCurrencyDollar size={12} className="text-emerald-600" /> 1 Session: ${selectedWorkshop.singleSessionPrice}</div>}
+                        <div className="flex items-center gap-2 text-xs"><HiCurrencyDollar size={12} className="text-emerald-600" /> Group: ${selectedWorkshop.groupPrice || selectedWorkshop.amount}</div>
+                        <div className="flex items-center gap-2 text-xs"><HiCurrencyDollar size={12} className="text-emerald-600" /> 1:1: ${selectedWorkshop.personalPrice || selectedWorkshop.amount}</div>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-1">

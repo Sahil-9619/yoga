@@ -22,64 +22,8 @@ interface WorkshopDetailsModalProps {
 }
 
 export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: WorkshopDetailsModalProps) => {
-    const [timeLeft, setTimeLeft] = React.useState<string | null>(null);
-
     React.useEffect(() => {
-        if (!workshop || !isOpen) {
-            setTimeLeft(null);
-            return;
-        }
-
-        const calculateTimeLeft = () => {
-            try {
-                const dateObj = new Date(workshop.date);
-                const timeMatch = workshop.time?.match(/(\d+):(\d+)\s*(AM|PM)/i);
-                
-                if (timeMatch) {
-                    let hours = parseInt(timeMatch[1], 10);
-                    const minutes = parseInt(timeMatch[2], 10);
-                    const modifier = timeMatch[3].toUpperCase();
-                    
-                    if (hours === 12) hours = 0;
-                    if (modifier === 'PM') hours += 12;
-
-                    const now = new Date();
-                    const options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false } as const;
-                    const formatter = new Intl.DateTimeFormat('en-US', options);
-                    const parts = formatter.formatToParts(now);
-                    
-                    const getPart = (type: string) => parts.find(p => p.type === type)?.value;
-                    const nowIST = new Date(`${getPart('year')}-${getPart('month')}-${getPart('day')}T${getPart('hour')}:${getPart('minute')}:${getPart('second')}`);
-
-                    const wOptions = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' } as const;
-                    const wFormatter = new Intl.DateTimeFormat('en-US', wOptions);
-                    const wParts = wFormatter.formatToParts(dateObj);
-                    
-                    const wGetPart = (type: string) => wParts.find(p => p.type === type)?.value;
-                    const workshopDateLocal = new Date(`${wGetPart('year')}-${wGetPart('month')}-${wGetPart('day')}T${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`);
-                    
-                    const diff = workshopDateLocal.getTime() - nowIST.getTime();
-                    
-                    if (diff <= 0) {
-                        setTimeLeft("Started / Ended");
-                    } else {
-                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                        const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                        const mins = Math.floor((diff / 1000 / 60) % 60);
-                        
-                        if (days > 0) setTimeLeft(`Starts in ${days}d ${hrs}h`);
-                        else if (hrs > 0) setTimeLeft(`Starts in ${hrs}h ${mins}m`);
-                        else setTimeLeft(`Starts in ${mins}m`);
-                    }
-                }
-            } catch (e) {
-                setTimeLeft(null);
-            }
-        };
-
-        calculateTimeLeft();
-        const interval = setInterval(calculateTimeLeft, 60000);
-        return () => clearInterval(interval);
+        // Time left countdown removed as time field is deprecated in favor of free-text scheduleInfo
     }, [workshop, isOpen]);
 
     if (!workshop) return null;
@@ -133,12 +77,15 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                     <span className="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur text-white text-[9px] font-bold uppercase tracking-widest border border-white/20">
                                         {workshop.mode}
                                     </span>
-                                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest ${workshop.priceType === 'free' ? 'bg-emerald-400/90 text-white' : 'bg-amber-400/90 text-amber-900'}`}>
-                                        {workshop.priceType === 'free' ? 'Free' : `₹${workshop.amount}`}
-                                    </span>
-                                    {timeLeft && (
-                                        <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/90 backdrop-blur text-white text-[9px] font-bold uppercase tracking-widest border border-indigo-400/30 flex items-center gap-1.5 shadow-sm">
-                                            <Clock className="w-2.5 h-2.5" /> {timeLeft}
+                                    {workshop.priceType === 'free' ? (
+                                        <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-emerald-400/90 text-white">Free</span>
+                                    ) : (
+                                        <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-amber-400/90 text-amber-900 flex items-center gap-1.5 flex-wrap">
+                                            {workshop.singleSessionPrice && <span>1 Session: ${workshop.singleSessionPrice}</span>}
+                                            {workshop.singleSessionPrice && <span className="opacity-50">|</span>}
+                                            <span>Grp: ${workshop.groupPrice || workshop.amount}</span>
+                                            <span className="opacity-50">|</span>
+                                            <span>1:1: ${workshop.personalPrice || workshop.amount}</span>
                                         </span>
                                     )}
                                 </div>
@@ -149,19 +96,26 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                         {/* Body */}
                         <div className="flex-1 overflow-y-auto flex flex-col">
                             {/* Quick stats bar */}
-                            <div className="grid grid-cols-3 divide-x divide-emerald-100 border-b border-emerald-100 bg-emerald-50/40">
+                            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-emerald-100 border-b border-emerald-100 bg-emerald-50/40">
                                 <div className="flex flex-col items-center py-3 px-2 gap-1">
                                     <Calendar className="w-3.5 h-3.5 text-emerald-600" />
-                                    <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Date</span>
+                                    <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Date / Freq</span>
                                     <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">
-                                        {new Date(workshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' })}
+                                        {workshop.frequency || (workshop.date ? new Date(workshop.date).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', year: 'numeric' }) : '')}
                                     </span>
                                 </div>
                                 <div className="flex flex-col items-center py-3 px-2 gap-1">
                                     <Clock className="w-3.5 h-3.5 text-emerald-600" />
-                                    <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Time</span>
-                                    <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.time} IST</span>
+                                    <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Schedule</span>
+                                    <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.scheduleInfo}</span>
                                 </div>
+                                {workshop.duration && (
+                                    <div className="flex flex-col items-center py-3 px-2 gap-1 hidden md:flex">
+                                        <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                                        <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Duration</span>
+                                        <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.duration}</span>
+                                    </div>
+                                )}
                                 <div className="flex flex-col items-center py-3 px-2 gap-1">
                                     {workshop.mode === 'online' ? <Globe className="w-3.5 h-3.5 text-emerald-600" /> : <MapPin className="w-3.5 h-3.5 text-emerald-600" />}
                                     <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">
@@ -189,7 +143,13 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                             <div className="flex-1">
                                 <div className="text-[9px] font-bold uppercase tracking-widest text-[#5C7562]">Price</div>
                                 <div className="text-xl font-serif text-[#1A3320]">
-                                    {workshop.priceType === 'free' ? 'Free' : `₹${workshop.amount}`}
+                                    {workshop.priceType === 'free' ? 'Free' : (
+                                        <div className="flex flex-col text-xs gap-0.5 mt-1">
+                                            {workshop.singleSessionPrice && <span><b className="font-bold text-emerald-700">1 Session:</b> ${workshop.singleSessionPrice}</span>}
+                                            <span><b className="font-bold text-emerald-700">Group:</b> ${workshop.groupPrice || workshop.amount}</span>
+                                            <span><b className="font-bold text-emerald-700">1:1:</b> ${workshop.personalPrice || workshop.amount}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <button

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     email:      { type: DataTypes.STRING, allowNull: false },
     phone:      { type: DataTypes.STRING, allowNull: false },
     workshopId: { type: DataTypes.INTEGER, allowNull: true },
+    userId:     { type: DataTypes.INTEGER, allowNull: true },
     workshopTitle: { type: DataTypes.STRING },
     categoryName:  { type: DataTypes.STRING },
     amount:     { type: DataTypes.DECIMAL },

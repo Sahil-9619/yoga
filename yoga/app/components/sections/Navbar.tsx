@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Menu, X, ChevronDown, Activity, Wind, Moon, Sun, Zap, LogOut } from 'lucide-react';
+import { Sparkles, Menu, X, ChevronDown, Activity, Wind, Moon, Sun, Zap, LogOut, User } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
 import Link from 'next/link';
@@ -12,24 +12,41 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isYogaHovered, setIsYogaHovered] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const pathname = usePathname();
   const isAboutPage = pathname === '/about' || pathname.startsWith('/yoga');
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const updateHeaderUser = () => {
       import('../../services/customer.service').then(m => setUser(m.CustomerService.getCurrentUser()));
     };
-    
+
     updateHeaderUser();
     window.addEventListener("loginChange", updateHeaderUser);
     window.addEventListener("storage", updateHeaderUser);
-    
+
     return () => {
       window.removeEventListener("loginChange", updateHeaderUser);
       window.removeEventListener("storage", updateHeaderUser);
     };
   }, []);
+
+  const handleLogout = async () => {
+    const { CustomerService } = await import('../../services/customer.service');
+    CustomerService.logout();
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -59,7 +76,7 @@ export const Navbar = () => {
           <Link href="/" className="flex-none flex items-center gap-3 cursor-pointer group z-10">
             <div className={cn(
               "relative flex items-center justify-center transition-all duration-500 z-[110]",
-              isScrolled ? "w-12 h-12" : "w-20 h-20"
+              isScrolled ? "w-12 h-12" : "w-16 h-16 lg:w-20 lg:h-20"
             )}>
               <Image
                 src="/logo-v2.png"
@@ -75,14 +92,14 @@ export const Navbar = () => {
               "font-serif uppercase transition-all duration-500",
               isScrolled
                 ? "text-[10px] sm:text-xs font-bold tracking-tight text-[#1A3320]"
-                : (isAboutPage ? "text-base sm:text-xl font-medium tracking-widest text-white" : "text-base sm:text-xl font-medium tracking-widest text-[#1A3320]")
+                : (isAboutPage ? "text-sm lg:text-xl font-medium tracking-widest text-white" : "text-sm lg:text-xl font-medium tracking-widest text-[#1A3320]")
             )}>
               Saargaamm bhartiye
             </span>
           </Link>
 
           {/* Navigation Items */}
-          <div className={cn("hidden md:flex flex-1 justify-center items-center", isScrolled ? "gap-6" : "gap-10")}>
+          <div className={cn("hidden md:flex flex-1 justify-center items-center px-4", isScrolled ? "gap-4 lg:gap-6" : "gap-4 lg:gap-10")}>
             {/* Yoga Dropdown */}
             <div
               className="relative py-2"
@@ -147,12 +164,46 @@ export const Navbar = () => {
             </Link>
 
             {user ? (
-              <>
+              <div className="flex items-center gap-6">
                 <Link href="/my-videos" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
-                  My Videos
+                  My Library
                 </Link>
-
-              </>
+                <div className="relative" ref={profileDropdownRef}>
+                  <button 
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                    className={cn("nav-link-underline flex items-center gap-1.5 cursor-pointer focus:outline-none transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}
+                  >
+                    <div className={cn("flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
+                      <User className="w-3.5 h-3.5" />
+                      <span>{user.name?.split(' ')[0] || 'User'}</span>
+                    </div>
+                  </button>
+                  
+                  <AnimatePresence>
+                    {isProfileDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-4 w-48 bg-white rounded-2xl shadow-xl border border-[#D8E2D5] overflow-hidden py-2 z-50"
+                      >
+                        <div className="px-4 py-3 border-b border-[#D8E2D5]">
+                          <p className="text-sm font-bold text-[#1A3320] truncate">{user.name}</p>
+                          <p className="text-[10px] text-[#5C7562] truncate">{user.email}</p>
+                        </div>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-2 px-4 py-3 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors uppercase tracking-widest text-left"
+                        >
+                          <LogOut className="w-3.5 h-3.5" />
+                          Log Out
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
             ) : (
               <Link href="/login" className={cn("nav-link-underline text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase transition-colors", isScrolled ? "text-[#3A5340] hover:text-[#1A3320]" : (isAboutPage ? "text-white/80 hover:text-white" : "text-[#3A5340] hover:text-[#1A3320]"))}>
                 Login
@@ -161,7 +212,8 @@ export const Navbar = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex-none flex items-center gap-3 z-10">
+          <div className="flex-none flex items-center gap-4 z-10">
+
             <Link href="/workshop">
               <Button variant={isScrolled ? "premium" : (isAboutPage ? "outline" : "premium")} size={isScrolled ? "sm" : "default"} className={cn("!hidden lg:!flex uppercase tracking-wider text-xs", !isScrolled && isAboutPage && "text-white border-white/30 hover:bg-white/10")}>
                 Book a Session
@@ -172,6 +224,7 @@ export const Navbar = () => {
             </button>
           </div>
         </motion.nav>
+
       </div>
 
       {/* Mobile Menu */}
@@ -208,7 +261,16 @@ export const Navbar = () => {
               <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">Contact</Link>
               {user ? (
                 <>
-                  <Link href="/my-videos" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">My Videos</Link>
+                  <div className="flex items-center gap-3 py-2 border-b border-emerald-50 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-600">Logged in as</div>
+                      <div className="font-serif text-xl text-[#1A3320]">{user.name}</div>
+                    </div>
+                  </div>
+                  <Link href="/my-videos" onClick={() => setIsMobileMenuOpen(false)} className="font-serif text-3xl text-[#1A3320]">My Library</Link>
                   <button onClick={() => {
                     import('../../services/customer.service').then(m => {
                       m.CustomerService.logout();

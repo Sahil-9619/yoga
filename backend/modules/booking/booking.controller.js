@@ -6,11 +6,11 @@ const otpStore = new Map(); // Simple in-memory store for OTPs: email -> { otp, 
 
 const create = async (req, res) => {
     try {
-        const { name, email, phone, workshopId, workshopTitle, categoryName, amount, priceType } = req.body;
+        const { name, email, phone, workshopId, workshopTitle, categoryName, amount, priceType, userId } = req.body;
         if (!name || !email || !phone || !workshopId) {
             return res.status(400).json({ success: false, message: 'Name, email, phone and workshopId are required.' });
         }
-        const data = await service.createBooking({ name, email, phone, workshopId, workshopTitle, categoryName, amount, priceType });
+        const data = await service.createBooking({ name, email, phone, workshopId, workshopTitle, categoryName, amount, priceType, userId });
         
         // Asynchronously fetch workshop details and send the booking confirmation email
         (async () => {
@@ -47,6 +47,23 @@ const getAll = async (req, res) => {
     try {
         const data = await service.getAllBookings();
         return res.status(200).json({ success: true, data });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const getMyBookings = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) return res.status(400).json({ success: false, message: 'User ID is required' });
+        
+        const { Booking, Workshop } = require('../../models');
+        const bookings = await Booking.findAll({
+            where: { userId },
+            include: [{ model: Workshop, attributes: ['title', 'date', 'mode', 'time'] }],
+            order: [['createdAt', 'DESC']]
+        });
+        return res.status(200).json({ success: true, data: bookings });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
@@ -117,4 +134,4 @@ const verifyOtp = async (req, res) => {
     }
 };
 
-module.exports = { create, getAll, remove, sendOtp, verifyOtp };
+module.exports = { create, getAll, getMyBookings, remove, sendOtp, verifyOtp };

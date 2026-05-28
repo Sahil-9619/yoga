@@ -98,9 +98,9 @@ export const Footer = () => {
             <h4 className="text-[10px] text-[#1A3320] font-bold tracking-[0.3em] uppercase mb-8">Contact</h4>
             <ul className="space-y-6">
               <li className="group">
-                <a href="mailto:Pranayogahub@gmail.com" className="flex gap-4 items-start text-[#5C7562] font-light text-sm md:text-base cursor-pointer hover:text-emerald-700 transition-colors">
+                <a href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'Pranayogahub@gmail.com'}`} className="flex gap-4 items-start text-[#5C7562] font-light text-sm md:text-base cursor-pointer hover:text-emerald-700 transition-colors">
                   <Mail className="w-5 h-5 text-emerald-500 group-hover:text-emerald-600 transition-colors mt-0.5 shrink-0" />
-                  <span>Pranayogahub@gmail.com</span>
+                  <span>{process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'Pranayogahub@gmail.com'}</span>
                 </a>
               </li>
               <li className="group">

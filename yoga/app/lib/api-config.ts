@@ -45,6 +45,7 @@ export const API_ENDPOINTS = {
   SEND_OTP: `${API_BASE_URL}/booking/send-otp`,
   VERIFY_OTP: `${API_BASE_URL}/booking/verify-otp`,
   GET_ALL_BOOKINGS: `${API_BASE_URL}/booking/all`,
+  GET_MY_BOOKINGS: `${API_BASE_URL}/booking/my-bookings`,
   DELETE_BOOKING: (id: string | number) => `${API_BASE_URL}/booking/${id}`,
   CREATE_PAYPAL_ORDER: `${API_BASE_URL}/payment/create-order`,
   CAPTURE_PAYPAL_ORDER: `${API_BASE_URL}/payment/capture-order`,

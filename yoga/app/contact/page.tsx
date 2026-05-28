@@ -28,8 +28,8 @@ export default function ContactPage() {
             // Clear success message after 5 seconds
             setTimeout(() => setStatus({ type: null, message: '' }), 5000);
         } catch (error: any) {
-            const errorMessage = error.message === 'Failed to fetch' 
-                ? 'Something went wrong. Please try again later.' 
+            const errorMessage = error.message === 'Failed to fetch'
+                ? 'Something went wrong. Please try again later.'
                 : (error.message || 'Something went wrong. Please try again later.');
             setStatus({
                 type: 'error',
@@ -125,7 +125,7 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <div className="text-[10px] font-bold text-[#1A3320] uppercase tracking-widest">Email Support</div>
-                                            <div className="text-sm text-[#5C7562]">hello@sargambhartiya.com</div>
+                                            <div className="text-sm text-[#5C7562]">Pranayogahub@gmail.com</div>
                                         </div>
                                     </div>
                                 </div>

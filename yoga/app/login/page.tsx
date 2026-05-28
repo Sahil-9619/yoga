@@ -1,17 +1,22 @@
 "use client";
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CustomerService } from '../services/customer.service';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { HiArrowRight, HiExclamationCircle } from 'react-icons/hi';
+import { Eye, EyeOff } from 'lucide-react';
 
-export default function LoginPage() {
+import { Suspense } from 'react';
+
+function LoginContent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,7 +29,12 @@ export default function LoginPage() {
                 if (typeof window !== 'undefined') {
                   window.dispatchEvent(new Event('loginChange'));
                 }
-                router.push('/workshop?tab=videos');
+                const redirectUrl = searchParams.get('redirect');
+                if (redirectUrl) {
+                    router.push(redirectUrl);
+                } else {
+                    router.push('/my-videos');
+                }
             } else {
                 setError(res.message);
             }
@@ -72,14 +82,23 @@ export default function LoginPage() {
                         </div>
                         <div>
                             <label className="block text-[10px] font-bold text-[#1A3320] uppercase tracking-[0.2em] mb-3">Password</label>
-                            <input
-                                type="password"
-                                required
-                                className="w-full pb-3 bg-transparent border-b border-[#D8E2D5] focus:outline-none focus:border-[#1A3320] transition-colors text-[#1A3320] font-light tracking-widest text-base md:text-lg placeholder:tracking-normal placeholder:text-emerald-900/20"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    required
+                                    className="w-full pb-3 pr-10 bg-transparent border-b border-[#D8E2D5] focus:outline-none focus:border-[#1A3320] transition-colors text-[#1A3320] font-light tracking-widest text-base md:text-lg placeholder:tracking-normal placeholder:text-emerald-900/20"
+                                    placeholder="Enter your password"
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                />
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-0 top-0 text-slate-400 hover:text-[#1A3320] transition-colors"
+                                >
+                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                </button>
+                            </div>
                         </div>
 
                         <button type="submit" disabled={isLoading} className="w-full py-4 mt-4 bg-[#1A3320] text-white font-bold uppercase tracking-[0.2em] text-xs hover:bg-emerald-900 transition-all flex items-center justify-between px-8 disabled:opacity-70 group rounded-full shadow-2xl shadow-emerald-900/20">
@@ -96,5 +115,13 @@ export default function LoginPage() {
                 </motion.div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#F4F7F2] flex items-center justify-center">Loading...</div>}>
+            <LoginContent />
+        </Suspense>
     );
 }

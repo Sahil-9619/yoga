@@ -18,10 +18,7 @@ const createWorkshop = async (data) => {
 
     if (
         !title ||
-        !description ||
         !photo ||
-        !date ||
-        !time ||
         !mode ||
         !priceType ||
         !categoryId
@@ -31,6 +28,17 @@ const createWorkshop = async (data) => {
             "All required fields must be filled"
         );
     }
+
+    if (!data.date || data.date === '') {
+        data.date = null;
+    }
+
+    const decimalFields = ['amount', 'groupPrice', 'personalPrice', 'singleSessionPrice'];
+    decimalFields.forEach(field => {
+        if (data[field] === '' || data[field] === 'null' || data[field] === 'NaN' || data[field] === undefined) {
+            data[field] = null;
+        }
+    });
 
     return await repository.createWorkshop(
         data
@@ -75,6 +83,17 @@ const updateWorkshop = async (
             "Workshop not found"
         );
     }
+
+    if (!data.date || data.date === '') {
+        data.date = null;
+    }
+
+    const decimalFields = ['amount', 'groupPrice', 'personalPrice', 'singleSessionPrice'];
+    decimalFields.forEach(field => {
+        if (data[field] === '' || data[field] === 'null' || data[field] === 'NaN' || data[field] === undefined) {
+            data[field] = null;
+        }
+    });
 
     await repository.updateWorkshop(
         id,

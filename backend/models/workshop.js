@@ -21,6 +21,12 @@ module.exports = (sequelize, DataTypes) => {
     platform: DataTypes.STRING,
     priceType: DataTypes.STRING,
     amount: DataTypes.DECIMAL,
+    groupPrice: DataTypes.DECIMAL,
+    personalPrice: DataTypes.DECIMAL,
+    singleSessionPrice: DataTypes.DECIMAL,
+    scheduleInfo: DataTypes.STRING,
+    frequency: DataTypes.STRING,
+    duration: DataTypes.STRING,
     categoryId: DataTypes.INTEGER
   }, {
     sequelize,
