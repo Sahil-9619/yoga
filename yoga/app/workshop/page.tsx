@@ -241,6 +241,13 @@ function WorkshopContent() {
                                                             )}
                                                         </div>
                                                         <h3 className="text-base font-serif text-[#1A3320] leading-snug line-clamp-2">{item.title}</h3>
+                                                             {item.frequency && (
+                                                            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                                                                <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                                                                    {item.frequency} {item.duration ? `(${item.duration})` : ''}
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
 
