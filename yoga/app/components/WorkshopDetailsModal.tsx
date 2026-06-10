@@ -110,7 +110,7 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                     <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.scheduleInfo}</span>
                                 </div>
                                 {workshop.duration && (
-                                    <div className="flex flex-col items-center py-3 px-2 gap-1 hidden md:flex">
+                                  <div className="flex flex-col items-center py-3 px-2 gap-1">
                                         <Clock className="w-3.5 h-3.5 text-emerald-600" />
                                         <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">Duration</span>
                                         <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.duration}</span>
