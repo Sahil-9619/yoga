@@ -153,7 +153,7 @@ function WorkshopContent() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-emerald-100 pb-8"
+                        className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 border-b border-emerald-100 pb-8"
                     >
                         <div className="text-center md:text-left">
                             <span className="text-emerald-600 font-bold text-[10px] tracking-[0.4em] uppercase mb-4 block">Curated Sessions</span>
