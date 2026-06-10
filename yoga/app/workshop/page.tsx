@@ -258,10 +258,12 @@ function WorkshopContent() {
                                                         <Clock className="w-3 h-3 text-emerald-500 flex-none" />
                                                         {item.scheduleInfo}
                                                     </span>
+                                                     {((item.mode === 'online' && item.platform) || (item.mode !== 'online' && item.location)) && (
                                                     <span className="flex items-center gap-1.5">
                                                         {item.mode === 'online' ? <Globe className="w-3 h-3 text-emerald-500" /> : <MapPin className="w-3 h-3 text-emerald-500" />}
                                                         {item.mode === 'online' ? item.platform : item.location}
                                                     </span>
+                                            )}
                                                 </div>
 
                                                 {/* Row 3: buttons */}
@@ -317,10 +319,12 @@ function WorkshopContent() {
                                                         <Clock className="w-4 h-4 text-emerald-600 flex-none mt-0.5" />
                                                         <span className="font-medium max-w-[150px] leading-snug">{item.scheduleInfo}</span>
                                                     </div>
+                                                     {((item.mode === 'online' && item.platform) || (item.mode !== 'online' && item.location)) && (
                                                     <div className="flex items-center gap-2 text-[11px] text-[#5C7562]">
                                                         {item.mode === 'online' ? <Globe className="w-4 h-4 opacity-40" /> : <MapPin className="w-4 h-4 opacity-40" />}
                                                         <span className="truncate max-w-[130px]">{item.mode === 'online' ? item.platform : item.location}</span>
                                                     </div>
+                                            )}
                                                 </div>
 
                                                 {/* Price + actions */}
