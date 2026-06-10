@@ -116,6 +116,7 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                         <span className="text-[11px] font-semibold text-[#1A3320] text-center leading-tight">{workshop.duration}</span>
                                     </div>
                                 )}
+                                 {((workshop.mode === 'online' && workshop.platform) || (workshop.mode !== 'online' && workshop.location)) && (
                                 <div className="flex flex-col items-center py-3 px-2 gap-1">
                                     {workshop.mode === 'online' ? <Globe className="w-3.5 h-3.5 text-emerald-600" /> : <MapPin className="w-3.5 h-3.5 text-emerald-600" />}
                                     <span className="text-[9px] font-bold text-[#5C7562] uppercase tracking-widest">
@@ -125,6 +126,7 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                         {workshop.mode === 'online' ? workshop.platform : workshop.location}
                                     </span>
                                 </div>
+                        )}
                             </div>
 
                             {/* Description */}
