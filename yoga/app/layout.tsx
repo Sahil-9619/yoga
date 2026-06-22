@@ -21,6 +21,8 @@ import LayoutWrapper from "./components/layout/LayoutWrapper";
 import { ScrollProgress } from "./components/ui/ScrollProgress";
 import { CustomerService } from "./services/customer.service";
 import { UserLogout } from "./components/UserLogout";
+import FloatingContact from "./components/FloatingContact";
+import YogaPopup from "./components/YogaPopup";
 
 export default function RootLayout({
   children,
@@ -34,11 +36,13 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="min-h-full flex flex-col">
+        <YogaPopup/>
         <ScrollProgress />
         <LayoutWrapper>
           {children}
         </LayoutWrapper>
         <UserLogout />
+        <FloatingContact/>
       </body>
     </html>
   );

@@ -9,6 +9,7 @@ import { Contact } from '../components/sections/Contact';
 import { CTAStrip } from '../components/sections/CTAStrip';
 import { Testimonials } from '../components/sections/Testimonials';
 import { FeaturedVideos } from '../components/sections/FeaturedVideos';
+import FloatingContact from '../components/FloatingContact';
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
         <CTAStrip />
         <Contact />
         <FAQs />
+        
       </main>
 
     </div>
