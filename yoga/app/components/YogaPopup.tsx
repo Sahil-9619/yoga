@@ -7,7 +7,6 @@ export default function YogaPopup() {
 
   const [form, setForm] = useState({
     name: "",
-    age: "",
     phone: "",
     city: "",
     goal: "",
@@ -41,7 +40,6 @@ export default function YogaPopup() {
   const handleSubmit = () => {
     if (
       !form.name ||
-      !form.age ||
       !form.phone ||
       !form.city ||
       !form.goal

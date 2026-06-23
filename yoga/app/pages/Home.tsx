@@ -31,7 +31,7 @@ export default function Home() {
         <FAQs />
         
       </main>
-
+    <FloatingContact/>
     </div>
   );
 }
