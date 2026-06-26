@@ -195,7 +195,7 @@ export default function AdminUsers() {
                                       {purchase.video?.title || 'Unknown Video'}
                                     </span>
                                     <div className="flex items-center justify-between mt-auto">
-                                      <span className="text-xs text-emerald-600 font-medium">₹{purchase.amount}</span>
+                                      <span className="text-xs text-emerald-600 font-medium">${purchase.amount} USD</span>
                                       <span className="text-[10px] text-[#5C7562]">
                                         {new Date(purchase.createdAt).toLocaleDateString()}
                                       </span>

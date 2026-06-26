@@ -151,7 +151,7 @@ export default function AdminDashboard() {
                           <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest ${w.mode === 'online' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'}`}>{w.mode}</span>
                         </td>
                         <td className="px-4 py-3 text-[#5C7562] text-xs">
-                          {w.priceType === 'free' ? <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-emerald-50 text-emerald-600">Free</span> : `₹${w.amount}`}
+                          {w.priceType === 'free' ? <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-emerald-50 text-emerald-600">Free</span> : `$${w.amount} USD`}
                         </td>
                       </motion.tr>
                     ))}
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
                         <td className="px-4 py-3 text-emerald-600 text-xs font-medium">{b.phone}</td>
                         <td className="px-4 py-3 text-[#5C7562] text-xs max-w-[160px] truncate">{b.workshopTitle || '—'}</td>
                         <td className="px-4 py-3 text-xs">
-                          {b.priceType === 'free' ? <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-emerald-50 text-emerald-600">Free</span> : `₹${b.amount}`}
+                          {b.priceType === 'free' ? <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-emerald-50 text-emerald-600">Free</span> : `$${b.amount} USD`}
                         </td>
                         <td className="px-4 py-3 text-[#5C7562] text-xs whitespace-nowrap">
                           {new Date(b.createdAt).toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric' })}

@@ -172,7 +172,7 @@ export default function AdminTransactions() {
                         <div className="text-xs text-emerald-600 uppercase tracking-widest font-bold mt-0.5">{booking.categoryName || 'General'}</div>
                       </td>
                       <td className="px-6 py-4 font-bold text-emerald-700">
-                        {booking.priceType === 'free' ? 'FREE' : `₹${booking.amount || 0}`}
+                        {booking.priceType === 'free' ? 'FREE' : `$${booking.amount || 0} USD`}
                       </td>
                       <td className="px-6 py-4">
                         <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full font-bold text-[10px] uppercase tracking-widest">
@@ -223,7 +223,7 @@ export default function AdminTransactions() {
                         {purchase.video?.title || 'Unknown Video'}
                       </td>
                       <td className="px-6 py-4 font-bold text-emerald-700">
-                        ₹{purchase.amount}
+                        ${purchase.amount} USD
                       </td>
                       <td className="px-6 py-4">
                         <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full font-bold text-[10px] uppercase tracking-widest">

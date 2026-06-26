@@ -78,14 +78,14 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                         {workshop.mode}
                                     </span>
                                     {workshop.priceType === 'free' ? (
-                                        <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-emerald-400/90 text-white">Free</span>
+                                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-widest bg-emerald-400/90 text-white">Free</span>
                                     ) : (
-                                        <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-amber-400/90 text-amber-900 flex items-center gap-1.5 flex-wrap">
-                                            {workshop.singleSessionPrice && <span>1 Session: ${workshop.singleSessionPrice}</span>}
+                                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-widest bg-amber-400/90 text-amber-900 flex items-center gap-1.5 flex-wrap">
+                                            {workshop.singleSessionPrice && <span>1 Session: ${workshop.singleSessionPrice} USD</span>}
                                             {workshop.singleSessionPrice && <span className="opacity-50">|</span>}
-                                            <span>Grp: ${workshop.groupPrice || workshop.amount}</span>
+                                            <span>Grp: ${workshop.groupPrice || workshop.amount} USD</span>
                                             <span className="opacity-50">|</span>
-                                            <span>1:1: ${workshop.personalPrice || workshop.amount}</span>
+                                            <span>1:1: ${workshop.personalPrice || workshop.amount} USD</span>
                                         </span>
                                     )}
                                 </div>
@@ -146,10 +146,10 @@ export const WorkshopDetailsModal = ({ isOpen, onClose, workshop, onBook }: Work
                                 <div className="text-[9px] font-bold uppercase tracking-widest text-[#5C7562]">Price</div>
                                 <div className="text-xl font-serif text-[#1A3320]">
                                     {workshop.priceType === 'free' ? 'Free' : (
-                                        <div className="flex flex-col text-xs gap-0.5 mt-1">
-                                            {workshop.singleSessionPrice && <span><b className="font-bold text-emerald-700">1 Session:</b> ${workshop.singleSessionPrice}</span>}
-                                            <span><b className="font-bold text-emerald-700">Group:</b> ${workshop.groupPrice || workshop.amount}</span>
-                                            <span><b className="font-bold text-emerald-700">1:1:</b> ${workshop.personalPrice || workshop.amount}</span>
+                                        <div className="flex flex-col text-sm font-semibold gap-0.5 mt-1 text-[#1A3320]">
+                                            {workshop.singleSessionPrice && <span><b className="font-bold text-emerald-700">1 Session:</b> ${workshop.singleSessionPrice} USD</span>}
+                                            <span><b className="font-bold text-emerald-700">Group:</b> ${workshop.groupPrice || workshop.amount} USD</span>
+                                            <span><b className="font-bold text-emerald-700">1:1:</b> ${workshop.personalPrice || workshop.amount} USD</span>
                                         </div>
                                     )}
                                 </div>

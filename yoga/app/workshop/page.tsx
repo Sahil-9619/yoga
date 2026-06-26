@@ -366,15 +366,15 @@ function WorkshopContent() {
                             ) : (
                               <>
                                 {item.singleSessionPrice && (
-                                  <span className="text-[11px] font-extrabold text-amber-900 bg-amber-50 border border-amber-100/30 rounded-md px-1.5 py-0.5 font-mono">
-                                    Single: ${item.singleSessionPrice}
+                                  <span className="text-[13px] font-extrabold text-amber-900 bg-amber-50 border border-amber-100/30 rounded-md px-2 py-1 font-mono">
+                                    Single: ${item.singleSessionPrice} USD
                                   </span>
                                 )}
-                                <span className="text-[11px] font-extrabold text-emerald-950 bg-emerald-50 border border-emerald-100/30 rounded-md px-1.5 py-0.5 font-mono">
-                                  Group: ${item.groupPrice || item.amount}
+                                <span className="text-[13px] font-extrabold text-emerald-950 bg-emerald-50 border border-emerald-100/30 rounded-md px-2 py-1 font-mono">
+                                  Group: ${item.groupPrice || item.amount} USD
                                 </span>
-                                <span className="text-[11px] font-extrabold text-blue-950 bg-blue-50 border border-blue-100/30 rounded-md px-1.5 py-0.5 font-mono">
-                                  1:1: ${item.personalPrice || item.amount}
+                                <span className="text-[13px] font-extrabold text-blue-950 bg-blue-50 border border-blue-100/30 rounded-md px-2 py-1 font-mono">
+                                  1:1: ${item.personalPrice || item.amount} USD
                                 </span>
                               </>
                             )}
@@ -443,8 +443,8 @@ function WorkshopContent() {
                             <PlayCircle className="w-16 h-16 text-white drop-shadow-lg" />
                           </div>
                         ) : (
-                          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md text-emerald-800 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-md">
-                            ₹{video.price || "Free"}
+                          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md text-emerald-800 px-4 py-1.5 rounded-full text-sm font-extrabold uppercase tracking-widest shadow-md">
+                            {Number(video.price) === 0 ? "Free" : `$${video.price} USD`}
                           </div>
                         )}
                       </div>

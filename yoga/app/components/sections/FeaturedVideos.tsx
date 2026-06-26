@@ -49,7 +49,7 @@ export const FeaturedVideos = () => {
                                     </div>
                                     {video.price > 0 && (
                                         <div className="absolute top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-md">
-                                            ₹{video.price}
+                                            ${video.price} USD
                                         </div>
                                     )}
                                     {video.price == 0 && (

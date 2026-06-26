@@ -155,7 +155,7 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                                             className={`py-3 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 ${selectedPriceType === 'single' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500 hover:border-emerald-300'}`}
                                                         >
                                                             <span>1 Session</span>
-                                                            <span className="text-[10px] opacity-70">${workshop.singleSessionPrice}</span>
+                                                            <span className="text-[10px] opacity-70">${workshop.singleSessionPrice} USD</span>
                                                         </button>
                                                     )}
                                                     <button 
@@ -163,14 +163,14 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                                         className={`py-3 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 ${selectedPriceType === 'group' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500 hover:border-emerald-300'}`}
                                                     >
                                                         <span>Group</span>
-                                                        <span className="text-[10px] opacity-70">${workshop.groupPrice || workshop.amount}</span>
+                                                        <span className="text-[10px] opacity-70">${workshop.groupPrice || workshop.amount} USD</span>
                                                     </button>
                                                     <button 
                                                         onClick={() => setSelectedPriceType('personal')}
                                                         className={`py-3 px-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center gap-1 ${selectedPriceType === 'personal' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-200 text-slate-500 hover:border-emerald-300'}`}
                                                     >
                                                         <span>1:1 Personal</span>
-                                                        <span className="text-[10px] opacity-70">${workshop.personalPrice || workshop.amount}</span>
+                                                        <span className="text-[10px] opacity-70">${workshop.personalPrice || workshop.amount} USD</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -201,7 +201,7 @@ export const BookingModal = ({ isOpen, onClose, workshop }: BookingModalProps) =
                                             <div className="flex justify-between items-start relative z-10">
                                                 <div>
                                                     <div className="text-[9px] font-bold uppercase tracking-widest opacity-60 mb-0.5">Amount</div>
-                                                    <div className="text-3xl font-serif">{workshop.priceType === 'free' ? 'Free' : `$${getPrice()}`}</div>
+                                                    <div className="text-3xl font-serif">{workshop.priceType === 'free' ? 'Free' : `$${getPrice()} USD`}</div>
                                                     {workshop.priceType === 'paid' && <div className="text-[10px] text-emerald-400 mt-1">{selectedPriceType === 'group' ? 'Group Session' : selectedPriceType === 'single' ? 'Single Session' : '1:1 Personal Session'}</div>}
                                                 </div>
                                                 <div className="px-2 py-0.5 rounded-full bg-white/10 text-[7px] font-bold uppercase tracking-widest">Secure</div>

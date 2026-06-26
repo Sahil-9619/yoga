@@ -145,7 +145,7 @@ export default function AdminBookingsPage() {
                       {b.priceType === 'free' ? (
                         <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest bg-emerald-50 text-emerald-600">Free</span>
                       ) : (
-                        <span className="text-sm font-medium text-[#1A3320]">₹{b.amount}</span>
+                        <span className="text-sm font-medium text-[#1A3320]">${b.amount} USD</span>
                       )}
                     </td>
                     <td className="px-6 py-4">

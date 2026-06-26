@@ -230,9 +230,9 @@ export default function AdminVideos() {
               onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
               placeholder="e.g. 12:45" icon={<HiClock size={16} />} />
 
-            <Input label="Price (₹)" type="number" value={formData.price}
+            <Input label="Price ($ USD)" type="number" value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              placeholder="e.g. 500 (0 for free)" />
+              placeholder="e.g. 5 (0 for free)" />
           </div>
 
           <div>

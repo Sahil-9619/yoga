@@ -56,12 +56,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, vid
                                     <p className="text-[10px] uppercase tracking-widest text-[#5C7562]">Premium Video Access</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="font-serif text-xl text-[#1A3320]">₹{video.price}</span>
+                                    <span className="font-serif text-xl text-[#1A3320]">${video.price} USD</span>
                                 </div>
                             </div>
                             <div className="flex justify-between items-center text-sm font-bold">
                                 <span className="text-[#1A3320]">Total Amount</span>
-                                <span className="text-emerald-700 text-lg">₹{video.price}</span>
+                                <span className="text-emerald-700 text-lg">${video.price} USD</span>
                             </div>
                         </div>
 
