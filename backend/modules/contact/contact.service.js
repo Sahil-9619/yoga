@@ -6,13 +6,13 @@ const submitContact = async (data) => {
 
     const { name, phone, email, message } = data;
 
-    if (!name || !phone || !email || !message) {
+    if (!name || !email || !message) {
         throw new Error("All fields are required");
     }
 
     return await repository.createContact({
         name,
-        phone,
+        phone: phone || "",
         email,
         message
     });

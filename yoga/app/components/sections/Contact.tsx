@@ -72,9 +72,8 @@ export const Contact = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-[#5C7562] ml-1">Phone Number</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#5C7562] ml-1">Phone Number (Optional)</label>
                 <input
-                  required
                   type="tel"
                   placeholder="+91 00000 00000"
                   className="w-full px-5 py-3 rounded-xl bg-slate-50 border border-[#D8E2D5] focus:outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all text-sm"
