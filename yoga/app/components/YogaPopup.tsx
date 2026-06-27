@@ -7,7 +7,7 @@ export default function YogaPopup() {
 
   const [form, setForm] = useState({
     name: "",
-    phone: "",
+    email: "",
     city: "",
     goal: "",
   });
@@ -29,7 +29,7 @@ export default function YogaPopup() {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setForm((prev) => ({
       ...prev,
@@ -38,23 +38,24 @@ export default function YogaPopup() {
   };
 
   const handleSubmit = () => {
-    if (
-      !form.name ||
-      !form.phone ||
-      !form.city ||
-      !form.goal
-    ) {
+    if (!form.name || !form.email || !form.city || !form.goal) {
       alert("Please fill all fields.");
+      return;
+    }
+
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(form.email.trim())) {
+      alert("Please enter a valid email address.");
       return;
     }
 
     const message = `🧘 Yoga Enquiry
 👤 Name: ${form.name}
-📞 Phone: ${form.phone}
+📧 Email: ${form.email}
 🏙️ City: ${form.city}
 🎯 Goal: ${form.goal}`;
     const whatsappUrl = `https://wa.me/919119743145?text=${encodeURIComponent(
-      message
+      message,
     )}`;
     window.open(whatsappUrl, "_blank");
     setOpen(false);
@@ -71,13 +72,13 @@ export default function YogaPopup() {
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="flex items-center justify-center gap-3 text-3xl font-bold">
-            <img
-                src="/logo-v2.png"
-                alt="Logo"
-                className="h-18 w-18 object-contain"
-            />
+          <img
+            src="/logo-v2.png"
+            alt="Logo"
+            className="h-18 w-18 object-contain"
+          />
 
-            <span>Join Yoga Program</span>
+          <span>Join Yoga Program</span>
         </h2>
 
         <p className="mb-6 text-center text-gray-900">
@@ -92,11 +93,11 @@ export default function YogaPopup() {
             onChange={handleChange}
             className="w-full rounded-xl border p-3 focus:border-green-500 focus:outline-none"
           />
-          
+
           <input
-            type="tel"
-            name="phone"
-            placeholder="Whatsapp Number"
+            type="email"
+            name="email"
+            placeholder="Email Id"
             onChange={handleChange}
             className="w-full rounded-xl border p-3 focus:border-green-500 focus:outline-none"
           />
@@ -116,25 +117,15 @@ export default function YogaPopup() {
           >
             <option value="">Select Goal</option>
 
-            <option value="Weight Loss">
-              Weight Loss
-            </option>
+            <option value="Weight Loss">Weight Loss</option>
 
-            <option value="Weight Gain">
-              Weight Gain
-            </option>
+            <option value="Weight Gain">Weight Gain</option>
 
-            <option value="Meditation">
-              Meditation
-            </option>
+            <option value="Meditation">Meditation</option>
 
-            <option value="Stress Relief">
-              Stress Relief
-            </option>
+            <option value="Stress Relief">Stress Relief</option>
 
-            <option value="General Fitness">
-              General Fitness
-            </option>
+            <option value="General Fitness">General Fitness</option>
           </select>
 
           <div className="flex gap-3 pt-2">
